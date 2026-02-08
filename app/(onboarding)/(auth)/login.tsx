@@ -43,7 +43,7 @@ export default function LoginScreen() {
                         Login
                     </Button>
 
-                    <Pressable style={{ marginTop: 16, alignSelf: "flex-end" }}>
+                    <Pressable style={{ marginTop: 16, alignSelf: "flex-end" }} onPress={() => router.push("/(onboarding)/(auth)/forgot-password")}>
                         <BodyText style={{ fontSize: FONT_SIZES.sm }}>
                             Forgot Password?
                         </BodyText>
