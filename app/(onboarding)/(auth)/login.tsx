@@ -51,7 +51,7 @@ export default function LoginScreen() {
                 </View>
             </View>
 
-            <Footer onSignup={() => router.push("/(onboarding)/signup")} />
+            <Footer onSignup={() => router.push("/(onboarding)/(auth)/signup")} />
         </CustomView>
     );
 }

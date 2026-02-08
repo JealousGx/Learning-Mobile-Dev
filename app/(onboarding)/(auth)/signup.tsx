@@ -102,7 +102,7 @@ export default function SignUpScreen() {
                     </View>
                 </View>
 
-                <Footer onLogin={() => router.push("/(onboarding)/login")} />
+                <Footer onLogin={() => router.push("/(onboarding)/(auth)/login")} />
             </ScrollView>
         </CustomView>
     );
