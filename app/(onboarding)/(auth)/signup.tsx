@@ -97,7 +97,7 @@ export default function SignUpScreen() {
                             </Pressable>
                         </View>
 
-                        <Button>Sign Up</Button>
+                        <Button onPress={() => router.push("/(tabs)/home")}>Sign Up</Button>
 
                     </View>
                 </View>
