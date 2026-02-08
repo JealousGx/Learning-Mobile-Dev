@@ -38,5 +38,6 @@ export const BORDER_RADIUS = {
   md: 8,
   lg: 12,
   xl: 20,
+  "2xl": 32,
   round: 9999,
 } as const;
