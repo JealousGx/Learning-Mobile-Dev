@@ -1,12 +1,13 @@
 import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
-    Image,
+    Animated,
+    Dimensions,
     type ImageSourcePropType,
     StyleSheet,
     TouchableOpacity,
-    View,
+    View
 } from "react-native";
 
 import { BodyText, Heading } from "@/components/shared/text";
@@ -27,25 +28,25 @@ const data: Record<
     }
 > = {
     1: {
-        image: require("@/assets/images/onboarding/screen-1.png"),
+        image: require("@/assets/images/onboarding/screen-1.webp"),
         title: "Comfortable Space",
         description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.",
     },
     2: {
-        image: require("@/assets/images/onboarding/screen-2.png"),
+        image: require("@/assets/images/onboarding/screen-2.webp"),
         title: "Modern Design",
         description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.",
     },
     3: {
-        image: require("@/assets/images/onboarding/screen-3.png"),
+        image: require("@/assets/images/onboarding/screen-3.webp"),
         title: "Styled Living",
         description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.",
     },
     4: {
-        image: require("@/assets/images/onboarding/screen-4.png"),
+        image: require("@/assets/images/onboarding/screen-4.webp"),
         title: "Relaxing Furniture",
         description:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.",
@@ -54,14 +55,67 @@ const data: Record<
 
 export default function Onboarding() {
     const [step, setStep] = useState<Step>(1);
+    const [isAnimating, setIsAnimating] = useState(false);
+
     const router = useRouter();
+
+    const pageOpacity = useRef(new Animated.Value(1)).current;
+    const translateX = useRef(new Animated.Value(0)).current;
+    const { width } = Dimensions.get("window");
+
+
+    const switchStep = (nextStep: Step | null) => {
+        if (isAnimating) return;
+        if (!nextStep) {
+            router.push("/welcome");
+            return;
+        }
+
+        if (nextStep === step) return;
+
+        const direction = nextStep > step ? 1 : -1; // 1 = forward (slide left), -1 = backward
+        setIsAnimating(true);
+
+        // slide + fade current page out
+        Animated.parallel([
+            Animated.timing(translateX, {
+                toValue: -direction * width,
+                duration: 220,
+                useNativeDriver: true,
+            }),
+            Animated.timing(pageOpacity, {
+                toValue: 0,
+                duration: 220,
+                useNativeDriver: true,
+            }),
+        ]).start(() => {
+            // put animated values off-screen and transparent for the new page
+            translateX.setValue(direction * width);
+            pageOpacity.setValue(0);
+            setStep(nextStep);
+
+            // slide + fade new page in
+            Animated.parallel([
+                Animated.timing(translateX, {
+                    toValue: 0,
+                    duration: 260,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(pageOpacity, {
+                    toValue: 1,
+                    duration: 260,
+                    useNativeDriver: true,
+                }),
+            ]).start(() => setIsAnimating(false));
+        });
+    };
 
     return (
         <CustomView>
             <View style={styles.imageContainer}>
-                <Image
+                <Animated.Image
                     source={data[step].image}
-                    style={styles.image}
+                    style={[styles.image, { transform: [{ translateX }], opacity: pageOpacity }]}
                     resizeMode="cover"
                 />
 
@@ -75,27 +129,30 @@ export default function Onboarding() {
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.content}>
+            <Animated.View style={[styles.content, { transform: [{ translateX }], opacity: pageOpacity }]}>
                 <Heading style={styles.title}>{data[step].title}</Heading>
                 <BodyText style={styles.description}>{data[step].description}</BodyText>
-            </View>
+            </Animated.View>
 
             <View style={styles.footer}>
                 <View style={{ display: "flex", flexDirection: "row", gap: 8 }}>
                     {[1, 2, 3, 4].map((s) => (
-                        <Dot key={s} active={s === step} />
+                        <TouchableOpacity key={s} onPress={() => switchStep(s as Step)} style={{ cursor: "pointer" }} disabled={isAnimating}>
+                            <Dot active={s === step} />
+                        </TouchableOpacity>
                     ))}
                 </View>
 
                 <Button
                     onPress={() => {
                         if (step < 4) {
-                            setStep((prev) => (prev + 1) as Step);
+                            switchStep((step + 1) as Step);
                         } else {
                             router.push("/welcome");
                         }
                     }}
                     style={{ paddingVertical: 8 }}
+                    disabled={isAnimating}
                 >
                     {step < 4 ? "Next" : "Get Started"}
                 </Button>
@@ -110,6 +167,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.dark.secondary,
         paddingBottom: 40,
         borderBottomLeftRadius: 24,
+        overflow: "hidden",
     },
     image: {
         width: "100%",
@@ -131,6 +189,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        overflow: "hidden",
     },
     title: {
         color: COLORS.dark.primary,
