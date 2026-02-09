@@ -26,14 +26,14 @@ export default function WelcomeScreen() {
             <View style={styles.actions}>
                 <Pressable
                     style={styles.loginBtn}
-                    onPress={() => router.push("/(onboarding)/(auth)/login")}
+                    onPress={() => router.push("/(auth)/login")}
                 >
                     <BodyText style={styles.loginText}>Log In</BodyText>
                 </Pressable>
 
                 <Pressable
                     style={styles.signupBtn}
-                    onPress={() => router.push("/(onboarding)/(auth)/signup")}
+                    onPress={() => router.push("/(auth)/signup")}
                 >
                     <BodyText style={styles.signupText}>Sign Up</BodyText>
                 </Pressable>
