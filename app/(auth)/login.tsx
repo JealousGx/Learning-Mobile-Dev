@@ -43,7 +43,7 @@ export default function LoginScreen() {
                         Login
                     </Button>
 
-                    <Pressable style={{ marginTop: 16, alignSelf: "flex-end" }} onPress={() => router.push("/(onboarding)/(auth)/forgot-password")}>
+                    <Pressable style={{ marginTop: 16, alignSelf: "flex-end" }} onPress={() => router.push("/(auth)/forgot-password")}>
                         <BodyText style={{ fontSize: FONT_SIZES.sm }}>
                             Forgot Password?
                         </BodyText>
@@ -51,7 +51,7 @@ export default function LoginScreen() {
                 </View>
             </View>
 
-            <Footer onSignup={() => router.push("/(onboarding)/(auth)/signup")} />
+            <Footer onSignup={() => router.push("/(auth)/signup")} />
         </CustomView>
     );
 }
