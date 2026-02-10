@@ -12,7 +12,7 @@ import { BodyText } from "../shared/text";
 type Props = PressableProps & {
     children?: React.ReactNode;
     variant?: "primary" | "secondary" | "outline" | "ghost" | "destructive";
-    size?: "sm" | "md" | "lg";
+    size?: "sm" | "md" | "lg" | "icon-sm" | "icon-md" | "icon-lg";
 };
 
 export const Button = ({ children, variant = "primary", size = "md", ...props }: Props) => {
@@ -114,5 +114,23 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 20,
         borderRadius: 24,
+    },
+    "icon-sm": {
+        width: 32,
+        height: 32,
+        padding: 6,
+        borderRadius: "100%",
+    },
+    "icon-md": {
+        width: 40,
+        height: 40,
+        padding: 8,
+        borderRadius: "100%",
+    },
+    "icon-lg": {
+        width: 48,
+        height: 48,
+        padding: 12,
+        borderRadius: "100%",
     },
 });
