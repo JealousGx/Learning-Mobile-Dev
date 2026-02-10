@@ -25,13 +25,13 @@ const styles = StyleSheet.create({
         marginBottom: SPACING.sm,
     },
     subheading: {
-        fontSize: FONT_SIZES.lg,
+        fontSize: FONT_SIZES.md,
         fontWeight: "500",
         color: COLORS.dark.white,
         marginBottom: SPACING.sm,
     },
     body: {
-        fontSize: FONT_SIZES.md,
+        fontSize: FONT_SIZES.sm,
         color: COLORS.dark.white,
     },
 });
