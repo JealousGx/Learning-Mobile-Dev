@@ -1,6 +1,7 @@
-import { AntDesign, SimpleLineIcons } from "@expo/vector-icons";
+import { AntDesign, Entypo, SimpleLineIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import {
+    FlatList,
     Image,
     Pressable,
     ScrollView,
@@ -10,14 +11,22 @@ import {
 } from "react-native";
 
 import { Carousel } from "@/components/shared/carousel";
-import { BodyText, Heading } from "@/components/shared/text";
+import { BodyText, Heading, Subheading } from "@/components/shared/text";
 import { CustomView } from "@/components/shared/view";
 import { Button } from "@/components/ui/button";
+import { Divider } from "@/components/ui/divider";
 
 import { BEST_SELLERS, type BestSeller } from "@/constants/data/best-sellers";
 import { CATEGORIES, type Category } from "@/constants/data/categories";
+import { ITEMS, type Item } from "@/constants/data/items";
 
-import { BORDER_RADIUS, COLORS, FONT_SIZES, FONT_WEIGHTS, SPACING } from "@/styles/theme";
+import {
+    BORDER_RADIUS,
+    COLORS,
+    FONT_SIZES,
+    FONT_WEIGHTS,
+    SPACING,
+} from "@/styles/theme";
 
 export default function Home() {
     const [activeCategoryIndex, setActiveCategoryIndex] = useState(1);
@@ -58,6 +67,8 @@ export default function Home() {
                 />
 
                 <BestSellers items={BEST_SELLERS} />
+
+                <LatestCollection items={ITEMS} />
             </ScrollView>
         </CustomView>
     );
@@ -90,14 +101,10 @@ function Categories({
     setActiveCategoryIndex: React.Dispatch<React.SetStateAction<number>>;
 }) {
     return (
-        <View style={{ gap: SPACING.xs }}>
+        <View style={{ gap: SPACING.sm }}>
             <Heading style={{ color: COLORS.dark.primary }}>Categories</Heading>
 
-            <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                style={styles.categoriesContainer}
-            >
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {categories.map((category) => (
                     <TouchableOpacity
                         key={category.id}
@@ -131,7 +138,7 @@ function Categories({
 
 function BestSellers({ items }: { items: BestSeller[] }) {
     return (
-        <View style={{ gap: SPACING.xs }}>
+        <View style={{ gap: SPACING.sm }}>
             <Heading style={{ color: COLORS.dark.primary }}>Best Sellers</Heading>
 
             <Carousel
@@ -234,6 +241,71 @@ function BestSellers({ items }: { items: BestSeller[] }) {
     );
 }
 
+function LatestCollection({ items }: { items: Item[] }) {
+    const numColumns = 2;
+
+    return (
+        <View style={{ gap: SPACING.sm }}>
+            <Heading style={{ color: COLORS.dark.primary }}>
+                Latest Collection
+            </Heading>
+
+            <FlatList
+                key={`num-columns-${numColumns}`}
+                data={items}
+                numColumns={numColumns}
+                nestedScrollEnabled
+                columnWrapperStyle={{ gap: SPACING.lg, marginBottom: SPACING.lg }}
+                renderItem={({ item }) => (
+                    <View
+                        style={{
+                            flex: 1,
+                            gap: SPACING.sm,
+                        }}
+                    >
+                        <Image
+                            source={item.image}
+                            style={{ width: "100%" }}
+                            resizeMode="cover"
+                        />
+
+                        <View style={{ gap: SPACING.xs }}>
+                            <Heading
+                                style={{
+                                    color: COLORS.dark.primary,
+                                    fontWeight: "500",
+                                }}
+                            >
+                                {item.name}
+                            </Heading>
+
+                            <BodyText>{item.description}</BodyText>
+
+                            <Divider style={{ marginVertical: SPACING.sm }} />
+
+                            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                                <Subheading>
+                                    ${item.price.toFixed(2)}
+                                </Subheading>
+
+                                <View style={{ flexDirection: "row", gap: SPACING.sm }}>
+                                    <Button size="icon-sm">
+                                        <Entypo name="heart" size={20} color={COLORS.dark.white} />
+                                    </Button>
+
+                                    <Button size="icon-sm">
+                                        <AntDesign name="plus" size={20} color={COLORS.dark.white} />
+                                    </Button>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                )}
+            />
+        </View>
+    );
+}
+
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: SPACING.lg,
@@ -256,9 +328,6 @@ const styles = StyleSheet.create({
         fontWeight: FONT_WEIGHTS.regular,
     },
 
-    categoriesContainer: {
-        marginTop: SPACING.md,
-    },
     categoryIconContainer: {
         width: 72,
         height: 72,
