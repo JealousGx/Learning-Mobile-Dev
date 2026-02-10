@@ -19,7 +19,7 @@ export const BodyText = ({ children, style, ...props }: TextProps) => (
 );
 const styles = StyleSheet.create({
     heading: {
-        fontSize: FONT_SIZES.xxl,
+        fontSize: FONT_SIZES.lg,
         fontWeight: "bold",
         color: COLORS.dark.white,
         marginBottom: SPACING.sm,
