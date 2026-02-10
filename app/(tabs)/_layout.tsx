@@ -29,7 +29,7 @@ export default function Layout() {
                 }}
             >
                 <Tabs.Screen
-                    name="home"
+                    name="index"
                     options={{
                         tabBarIcon: ({ color }) => (
                             <Ionicons name="home" size={28} color={color} />
