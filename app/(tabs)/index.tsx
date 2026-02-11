@@ -254,7 +254,7 @@ function LatestCollection({ items }: { items: Item[] }) {
                 key={`num-columns-${numColumns}`}
                 data={items}
                 numColumns={numColumns}
-                nestedScrollEnabled
+                scrollEnabled={false}
                 columnWrapperStyle={{ gap: SPACING.lg, marginBottom: SPACING.lg }}
                 renderItem={({ item }) => (
                     <View
