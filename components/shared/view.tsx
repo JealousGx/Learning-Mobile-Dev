@@ -20,5 +20,6 @@ export function CustomView({
         "background",
     );
 
-    return <SafeAreaView style={[{ height: "100%", backgroundColor }, style]} {...otherProps} />;
+    return <SafeAreaView edges={["top", "left", "right"]}
+        style={[{ flex: 1, backgroundColor }, style]} {...otherProps} />;
 }
