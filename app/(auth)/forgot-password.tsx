@@ -113,7 +113,7 @@ export default function ForgotPasswordScreen() {
                 text: "Password reset successful. Please log in.",
             });
 
-            router.replace("/(tabs)/home");
+            router.replace("/(tabs)");
         } catch (e) {
             console.error(e);
 

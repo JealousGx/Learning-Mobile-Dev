@@ -39,7 +39,7 @@ export default function LoginScreen() {
                 />
 
                 <View style={styles.formActions}>
-                    <Button onPress={() => router.push("/(tabs)/home")}>
+                    <Button onPress={() => router.push("/(tabs)")}>
                         Login
                     </Button>
 
