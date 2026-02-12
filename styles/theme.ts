@@ -8,6 +8,9 @@ export const COLORS = {
     "secondary-foreground": "#FAF0E6",
     foreground: "#DCBEB6",
     error: "#FF6B6B",
+    deepGray: "#b8b8b8",
+    lightGray: "#bfbfbf",
+    gray: "#E6E6E6",
   },
 } as const;
 
