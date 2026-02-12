@@ -1,4 +1,5 @@
 import {
+    Pressable,
     StyleSheet,
     type Text,
     TextInput,
@@ -15,6 +16,11 @@ type Props = TextInputProps & {
     labelProps?: Text["props"];
     wrapperProps?: View["props"];
     required?: boolean;
+
+    leftIcon?: React.ReactNode;
+    rightIcon?: React.ReactNode;
+    onLeftIconPress?: () => void;
+    onRightIconPress?: () => void;
 };
 
 export const Input = ({
@@ -22,6 +28,12 @@ export const Input = ({
     labelProps,
     wrapperProps,
     required,
+
+    leftIcon,
+    rightIcon,
+    onLeftIconPress,
+    onRightIconPress,
+
     ...props
 }: Props) => {
     const { style: labelStyle, ...restLabelProps } = labelProps ?? {};
@@ -41,11 +53,33 @@ export const Input = ({
                     )}
                 </BodyText>
             )}
-            <TextInput
-                {...restProps}
-                style={[inputStyles.input, inputStyle]}
-                placeholderTextColor={COLORS.dark.foreground}
-            ></TextInput>
+
+            <View style={inputStyles.inputContainer}>
+                {leftIcon && (
+                    <Pressable
+                        onPress={onLeftIconPress}
+                        style={inputStyles.iconLeft}
+                        hitSlop={8}
+                    >
+                        {leftIcon}
+                    </Pressable>
+                )}
+                <TextInput
+                    {...restProps}
+                    style={[inputStyles.input, inputStyle]}
+                    placeholderTextColor={COLORS.dark.foreground}
+                ></TextInput>
+
+                {rightIcon && (
+                    <Pressable
+                        onPress={onRightIconPress}
+                        style={inputStyles.iconRight}
+                        hitSlop={8}
+                    >
+                        {rightIcon}
+                    </Pressable>
+                )}
+            </View>
         </View>
     );
 };
@@ -56,15 +90,38 @@ export const inputStyles = StyleSheet.create({
         flexDirection: "column",
         gap: 12,
     },
-    input: {
+
+    inputContainer: {
+        flexDirection: "row",
+        alignItems: "center",
         backgroundColor: COLORS.dark["secondary-foreground"],
-        color: COLORS.dark.foreground,
+        borderRadius: 24,
         paddingHorizontal: 12,
-        paddingVertical: 8,
-        borderRadius: 18,
+        paddingVertical: 4
+    },
+    input: {
+        flex: 1,
+        color: COLORS.dark.foreground,
+        paddingVertical: 10,
         fontSize: 16,
     },
     label: {
         color: COLORS.dark.white,
+    },
+    inputWithLeftIcon: {
+        marginLeft: 8,
+    },
+
+    inputWithRightIcon: {
+        marginRight: 8,
+    },
+    iconLeft: {
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    iconRight: {
+        justifyContent: "center",
+        alignItems: "center",
     },
 });
