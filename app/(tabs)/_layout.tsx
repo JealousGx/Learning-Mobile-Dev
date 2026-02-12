@@ -72,6 +72,13 @@ export default function Layout() {
                         ),
                     }}
                 />
+
+                <Tabs.Screen
+                    name="search"
+                    options={{
+                        href: null
+                    }}
+                />
             </Tabs>
         </View>
     );
