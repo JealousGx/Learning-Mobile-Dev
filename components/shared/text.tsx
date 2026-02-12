@@ -1,6 +1,6 @@
 import { StyleSheet, Text, type TextProps } from "react-native";
 
-import { COLORS, FONT_SIZES, SPACING } from "@/styles/theme";
+import { COLORS, FONT_SIZES } from "@/styles/theme";
 
 export const Heading = ({ children, style, ...props }: TextProps) => (
     <Text style={[styles.heading, style]} {...props}>
@@ -22,13 +22,11 @@ const styles = StyleSheet.create({
         fontSize: FONT_SIZES.lg,
         fontWeight: "bold",
         color: COLORS.dark.white,
-        marginBottom: SPACING.sm,
     },
     subheading: {
         fontSize: FONT_SIZES.md,
         fontWeight: "500",
         color: COLORS.dark.white,
-        marginBottom: SPACING.sm,
     },
     body: {
         fontSize: FONT_SIZES.sm,
