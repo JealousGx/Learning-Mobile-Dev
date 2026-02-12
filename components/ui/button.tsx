@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.dark.secondary,
     },
     secondaryText: {
-        color: COLORS.dark["secondary-foreground"],
+        color: COLORS.dark.primary,
     },
     secondaryPressed: {
         backgroundColor: `${COLORS.dark.secondary}E6`,
