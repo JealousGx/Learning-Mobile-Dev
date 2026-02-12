@@ -1,4 +1,5 @@
 import { AntDesign, Entypo, SimpleLineIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
     FlatList,
@@ -30,11 +31,12 @@ import {
 
 export default function Home() {
     const [activeCategoryIndex, setActiveCategoryIndex] = useState(1);
+    const router = useRouter();
 
     return (
         <CustomView>
             <ScrollView horizontal={false} contentContainerStyle={styles.container}>
-                <Header />
+                <Header onSearch={() => router.navigate("/search")} />
 
                 <Carousel
                     data={[
@@ -74,7 +76,7 @@ export default function Home() {
     );
 }
 
-function Header() {
+function Header({ onSearch }: { onSearch: () => void }) {
     return (
         <View style={styles.header}>
             <View>
@@ -84,7 +86,7 @@ function Header() {
                 </BodyText>
             </View>
 
-            <Button size="icon-sm">
+            <Button size="icon-sm" onPress={onSearch}>
                 <SimpleLineIcons name="magnifier" size={18} color="black" />
             </Button>
         </View>
@@ -283,10 +285,14 @@ function LatestCollection({ items }: { items: Item[] }) {
 
                             <Divider style={{ marginVertical: SPACING.sm }} />
 
-                            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                                <Subheading>
-                                    ${item.price.toFixed(2)}
-                                </Subheading>
+                            <View
+                                style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                }}
+                            >
+                                <Subheading>${item.price.toFixed(2)}</Subheading>
 
                                 <View style={{ flexDirection: "row", gap: SPACING.sm }}>
                                     <Button size="icon-sm">
@@ -294,7 +300,11 @@ function LatestCollection({ items }: { items: Item[] }) {
                                     </Button>
 
                                     <Button size="icon-sm">
-                                        <AntDesign name="plus" size={20} color={COLORS.dark.white} />
+                                        <AntDesign
+                                            name="plus"
+                                            size={20}
+                                            color={COLORS.dark.white}
+                                        />
                                     </Button>
                                 </View>
                             </View>
