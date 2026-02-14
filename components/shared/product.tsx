@@ -1,17 +1,16 @@
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useState } from "react";
 import { Image, TouchableOpacity, View } from "react-native";
 
 import type { Item } from "@/constants/data/items";
+import ProductInfo from "@/features/[productId]";
 import { BORDER_RADIUS, COLORS, SPACING } from "@/styles/theme";
-
 import { Button } from "../ui/button";
 import { Divider } from "../ui/divider";
-
 import { BodyText, Heading, Subheading } from "./text";
 
 export function Product({ item }: { item: Item }) {
-    const router = useRouter();
+    const [displayProductInfo, setDisplayProductInfo] = useState(false);
 
     return (
         <TouchableOpacity
@@ -19,12 +18,7 @@ export function Product({ item }: { item: Item }) {
                 flex: 1,
                 gap: SPACING.sm,
             }}
-            onPress={() =>
-                router.navigate({
-                    pathname: "/products/[productId]",
-                    params: { productId: item.id },
-                })
-            }
+            onPress={() => setDisplayProductInfo((prev) => !prev)}
         >
             <Image
                 source={item.image}
@@ -74,6 +68,8 @@ export function Product({ item }: { item: Item }) {
                     </View>
                 </View>
             </View>
+
+            <ProductInfo productId={item.id.toString()} visible={displayProductInfo} onClose={() => setDisplayProductInfo(false)} />
         </TouchableOpacity>
     );
 }

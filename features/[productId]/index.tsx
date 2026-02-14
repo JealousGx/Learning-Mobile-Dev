@@ -1,7 +1,8 @@
 import { AntDesign, Entypo } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { Image, StyleSheet, View } from "react-native";
 
+import { BottomSheet } from "@/components/shared/bottom-sheet";
 import { Nav } from "@/components/shared/nav";
 import { BodyText, Heading, Subheading } from "@/components/shared/text";
 import { CustomView } from "@/components/shared/view";
@@ -12,8 +13,7 @@ import { ITEMS } from "@/constants/data/items";
 
 import { BORDER_RADIUS, COLORS, SPACING } from "@/styles/theme";
 
-export default function Product() {
-    const { productId } = useLocalSearchParams<{ productId: string }>();
+export default function ProductInfo({ productId, visible, onClose }: { productId: string, visible: boolean, onClose: () => void }) {
     const router = useRouter();
 
     const id = Number(productId);
@@ -21,7 +21,7 @@ export default function Product() {
 
     if (!productId || Number.isNaN(id) || !item) {
         return (
-            <CustomView>
+            <CustomView style={styles.container}>
                 <BodyText>Product not found.</BodyText>
 
                 <Button
@@ -35,12 +35,8 @@ export default function Product() {
     }
 
     return (
-        <CustomView style={styles.container}>
-            <Nav
-                title={item.name}
-                onSearch={() => router.navigate("/search")}
-                onBack={() => router.back()}
-            />
+        <BottomSheet visible={visible} onClose={onClose}>
+            <Nav title={item.name} />
 
             <View style={{ flex: 1 }}>
                 <Image
@@ -54,16 +50,37 @@ export default function Product() {
                     resizeMode="cover"
                 />
 
-                <Heading style={{ color: COLORS.dark.primary, marginBottom: SPACING.md }}>{item.name}</Heading>
+                <Heading
+                    style={{ color: COLORS.dark.primary, marginBottom: SPACING.md }}
+                >
+                    {item.name}
+                </Heading>
 
-                <BodyText style={{ color: COLORS.dark["secondary-foreground"], marginBottom: SPACING.md }}>
+                <BodyText
+                    style={{
+                        color: COLORS.dark["secondary-foreground"],
+                        marginBottom: SPACING.md,
+                    }}
+                >
                     {item.description}
                 </BodyText>
 
                 <Divider style={{ height: 1 }} />
 
-                <View style={{ gap: SPACING.sm, marginTop: SPACING.md, justifyContent: "space-between" }}>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                <View
+                    style={{
+                        gap: SPACING.sm,
+                        marginTop: SPACING.md,
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                        }}
+                    >
                         <Subheading>${item.price}</Subheading>
 
                         <View style={{ flexDirection: "row", gap: SPACING.sm }}>
@@ -72,30 +89,31 @@ export default function Product() {
                             </Button>
 
                             <Button size="icon-sm" variant="outline">
-                                <AntDesign
-                                    name="plus"
-                                    size={18}
-                                    color={COLORS.dark.primary}
-                                />
+                                <AntDesign name="plus" size={18} color={COLORS.dark.primary} />
                             </Button>
                         </View>
                     </View>
 
-
-                    <View style={{ alignItems: "flex-end", flexDirection: "row", justifyContent: "space-between" }}>
+                    <View
+                        style={{
+                            alignItems: "flex-end",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                        }}
+                    >
                         <BodyText>Users reviews ({item.rating} / 5)</BodyText>
 
                         <StarRating rating={item.rating} />
                     </View>
                 </View>
 
-                <Button style={{ marginTop: SPACING.xxl, }} variant="secondary">
+                <Button style={{ marginTop: SPACING.xxl }} variant="secondary">
                     <Subheading style={{ color: COLORS.dark.primary }}>
                         Add To Cart
                     </Subheading>
                 </Button>
             </View>
-        </CustomView>
+        </BottomSheet>
     );
 }
 
@@ -133,15 +151,11 @@ function StarRating({ rating }: { rating: number }) {
                 >
                     <AntDesign name="star" size={20} color={COLORS.dark.primary} />
                 </View>
-            </View>
+            </View>,
         );
     }
 
-    return (
-        <View style={{ flexDirection: "row", marginTop: 8 }}>
-            {stars}
-        </View>
-    );
+    return <View style={{ flexDirection: "row", marginTop: 8 }}>{stars}</View>;
 }
 
 const styles = StyleSheet.create({

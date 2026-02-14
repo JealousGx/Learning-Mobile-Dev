@@ -106,3 +106,9 @@ export const ITEMS = [
 ];
 
 export type Item = (typeof ITEMS)[number];
+
+export const CATEGORIZED_ITEMS: Record<number, Item[]> = {
+  2: ITEMS.filter((item) => [1, 2, 4, 7, 8, 10].includes(item.id)), // Office
+  1: ITEMS.filter((item) => [3, 6, 9, 12].includes(item.id)), // Living Room
+  3: ITEMS.filter((item) => [5, 11].includes(item.id)), // Bedroom
+};
