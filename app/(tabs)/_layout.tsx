@@ -38,7 +38,7 @@ export default function Layout() {
                 />
 
                 <Tabs.Screen
-                    name="explore"
+                    name="products/index"
                     options={{
                         tabBarIcon: ({ color }) => (
                             <AntDesign name="unordered-list" size={28} color={color} />
@@ -75,13 +75,6 @@ export default function Layout() {
 
                 <Tabs.Screen
                     name="search"
-                    options={{
-                        href: null
-                    }}
-                />
-
-                <Tabs.Screen
-                    name="products/index"
                     options={{
                         href: null
                     }}
