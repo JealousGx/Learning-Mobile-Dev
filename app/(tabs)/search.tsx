@@ -53,8 +53,6 @@ type Filter = {
 export default function Search() {
     const { categoryId } = useLocalSearchParams<{ categoryId: string }>();
 
-    console.log("Received categoryId:", categoryId, typeof categoryId);
-
     const [query, setQuery] = useState("");
     const router = useRouter();
 
