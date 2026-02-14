@@ -1,7 +1,7 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
 
+import { Nav } from "@/components/shared/nav";
 import { BodyText, Heading } from "@/components/shared/text";
 import { CustomView } from "@/components/shared/view";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ export default function LoginScreen() {
 
     return (
         <CustomView style={styles.container}>
-            <Nav onBack={() => router.back()} />
+            <Nav onBack={() => router.back()} title="Login" />
 
             <Header />
 
@@ -53,19 +53,6 @@ export default function LoginScreen() {
 
             <Footer onSignup={() => router.push("/(auth)/signup")} />
         </CustomView>
-    );
-}
-
-
-function Nav({ onBack }: { onBack?: () => void }) {
-    return (
-        <View style={styles.nav}>
-            <Pressable onPress={onBack} style={styles.navAction}>
-                <Ionicons name="arrow-back" size={24} color={COLORS.dark.white} />
-            </Pressable>
-
-            <BodyText style={styles.navText}>Login</BodyText>
-        </View>
     );
 }
 
@@ -108,24 +95,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginTop: 8,
         paddingHorizontal: 20,
-    },
-
-    nav: {
-        position: "relative",
-        width: "100%",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    navAction: {
-        position: "absolute",
-        left: 0,
-    },
-    navText: {
-        fontSize: 20,
-        lineHeight: 22,
-        fontWeight: "bold",
-        color: COLORS.dark.primary,
     },
 
     headerText: {

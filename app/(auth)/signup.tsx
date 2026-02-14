@@ -1,12 +1,13 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
+import { Nav } from "@/components/shared/nav";
 import { BodyText, Heading } from "@/components/shared/text";
 import { CustomView } from "@/components/shared/view";
 import { Button } from "@/components/ui/button";
 import { DateInput } from "@/components/ui/date-input";
 import { Input } from "@/components/ui/input";
+
 import { COLORS, FONT_SIZES } from "@/styles/theme";
 
 export default function SignUpScreen() {
@@ -19,7 +20,7 @@ export default function SignUpScreen() {
                 keyboardShouldPersistTaps="handled"
                 showsVerticalScrollIndicator={false}
             >
-                <Nav onBack={() => router.back()} />
+                <Nav onBack={() => router.back()} title="Sign Up" />
 
                 <Header />
 
@@ -108,18 +109,6 @@ export default function SignUpScreen() {
     );
 }
 
-function Nav({ onBack }: { onBack?: () => void }) {
-    return (
-        <View style={styles.nav}>
-            <Pressable onPress={onBack} style={styles.navAction}>
-                <Ionicons name="arrow-back" size={24} color={COLORS.dark.white} />
-            </Pressable>
-
-            <BodyText style={styles.navText}>Sign Up</BodyText>
-        </View>
-    );
-}
-
 function Header() {
     return (
         <View>
@@ -166,24 +155,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginTop: 8,
         paddingHorizontal: 20,
-    },
-
-    nav: {
-        position: "relative",
-        width: "100%",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    navAction: {
-        position: "absolute",
-        left: 0,
-    },
-    navText: {
-        fontSize: 20,
-        lineHeight: 22,
-        fontWeight: "bold",
-        color: COLORS.dark.primary,
     },
 
     headerText: {

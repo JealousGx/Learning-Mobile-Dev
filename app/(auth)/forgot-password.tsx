@@ -1,8 +1,8 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
+import { Nav } from "@/components/shared/nav";
 import { BodyText, Heading } from "@/components/shared/text";
 import { CustomView } from "@/components/shared/view";
 import { Button } from "@/components/ui/button";
@@ -138,7 +138,7 @@ export default function ForgotPasswordScreen() {
 
     return (
         <CustomView style={styles.container}>
-            <Nav onBack={handleBack} />
+            <Nav onBack={handleBack} title="Forgot Password" />
 
             <Header step={step} />
 
@@ -234,18 +234,6 @@ export default function ForgotPasswordScreen() {
     );
 }
 
-function Nav({ onBack }: { onBack?: () => void }) {
-    return (
-        <View style={styles.nav}>
-            <Pressable onPress={onBack} style={styles.navAction}>
-                <Ionicons name="arrow-back" size={24} color={COLORS.dark.white} />
-            </Pressable>
-
-            <BodyText style={styles.navText}>Forgot Password</BodyText>
-        </View>
-    );
-}
-
 function Header({ step }: { step: number }) {
 
     const titles: Record<number, string> = {
@@ -292,26 +280,6 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
         gap: 48,
-    },
-
-    nav: {
-        width: "100%",
-        position: "relative",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        paddingHorizontal: 20,
-        paddingVertical: 16,
-    },
-    navAction: {
-        position: "absolute",
-        left: 16,
-    },
-    navText: {
-        fontSize: 20,
-        lineHeight: 22,
-        fontWeight: "bold",
-        color: COLORS.dark.primary,
     },
 
     header: {

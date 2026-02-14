@@ -1,7 +1,8 @@
-import { AntDesign, Entypo, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
+import { AntDesign, Entypo } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Image, Pressable, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 
+import { Nav } from "@/components/shared/nav";
 import { BodyText, Heading, Subheading } from "@/components/shared/text";
 import { CustomView } from "@/components/shared/view";
 import { Button } from "@/components/ui/button";
@@ -36,7 +37,7 @@ export default function Product() {
     return (
         <CustomView style={styles.container}>
             <Nav
-                categoryName={item.name}
+                title={item.name}
                 onSearch={() => router.navigate("/search")}
                 onBack={() => router.back()}
             />
@@ -143,48 +144,11 @@ function StarRating({ rating }: { rating: number }) {
     );
 }
 
-function Nav({
-    categoryName,
-    onBack,
-    onSearch,
-}: {
-    categoryName: string;
-    onBack?: () => void;
-    onSearch: () => void;
-}) {
-    return (
-        <View style={styles.nav}>
-            <Pressable onPress={onBack}>
-                <Ionicons name="arrow-back" size={24} color={COLORS.dark.white} />
-            </Pressable>
-
-            <BodyText style={styles.navText}>{categoryName}</BodyText>
-
-            <Button size="icon-sm" onPress={onSearch}>
-                <SimpleLineIcons name="magnifier" size={18} color="black" />
-            </Button>
-        </View>
-    );
-}
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 20,
         paddingVertical: 16,
         gap: SPACING.xl,
-    },
-
-    nav: {
-        width: "100%",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-    },
-    navText: {
-        fontSize: 20,
-        lineHeight: 22,
-        fontWeight: "bold",
-        color: COLORS.dark.primary,
     },
 });

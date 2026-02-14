@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 
+import { Nav } from "@/components/shared/nav";
 import { Slider } from "@/components/shared/slider";
 import { BodyText, Heading } from "@/components/shared/text";
 import { CustomView } from "@/components/shared/view";
@@ -68,7 +69,7 @@ export default function Search() {
 
     return (
         <CustomView style={styles.container}>
-            <Nav onBack={() => router.back()} />
+            <Nav onBack={() => router.back()} title="Search" />
 
             <SearchInput
                 initialQuery={query}
@@ -84,18 +85,6 @@ export default function Search() {
 
             <TopSearches onClick={setQuery} />
         </CustomView>
-    );
-}
-
-function Nav({ onBack }: { onBack?: () => void }) {
-    return (
-        <View style={styles.nav}>
-            <Pressable onPress={onBack} style={styles.navAction}>
-                <Ionicons name="arrow-back" size={24} color={COLORS.dark.white} />
-            </Pressable>
-
-            <BodyText style={styles.navText}>Search</BodyText>
-        </View>
     );
 }
 
@@ -406,24 +395,6 @@ const styles = StyleSheet.create({
 
         paddingHorizontal: 20,
         paddingVertical: 16,
-    },
-
-    nav: {
-        position: "relative",
-        width: "100%",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    navAction: {
-        position: "absolute",
-        left: 0,
-    },
-    navText: {
-        fontSize: 20,
-        lineHeight: 22,
-        fontWeight: "bold",
-        color: COLORS.dark.primary,
     },
 
     searchInput: {
