@@ -70,7 +70,7 @@ export default function Home() {
 
                 <BestSellers items={BEST_SELLERS} />
 
-                <LatestCollection items={ITEMS.slice(6)} />
+                <LatestCollection items={ITEMS.slice(0, 6)} />
             </ScrollView>
         </CustomView>
     );
@@ -244,6 +244,8 @@ function BestSellers({ items }: { items: BestSeller[] }) {
 }
 
 function LatestCollection({ items }: { items: Item[] }) {
+    const router = useRouter();
+
     const numColumns = 2;
 
     return (
@@ -259,11 +261,12 @@ function LatestCollection({ items }: { items: Item[] }) {
                 scrollEnabled={false}
                 columnWrapperStyle={{ gap: SPACING.lg, marginBottom: SPACING.lg }}
                 renderItem={({ item }) => (
-                    <View
+                    <TouchableOpacity
                         style={{
                             flex: 1,
                             gap: SPACING.sm,
                         }}
+                        onPress={() => router.navigate({ pathname: "/products/[productId]", params: { productId: item.id } })}
                     >
                         <Image
                             source={item.image}
@@ -311,7 +314,7 @@ function LatestCollection({ items }: { items: Item[] }) {
                                 </View>
                             </View>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 )}
             />
         </View>
