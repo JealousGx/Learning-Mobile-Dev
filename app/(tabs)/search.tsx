@@ -1,5 +1,5 @@
 import { Ionicons, SimpleLineIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
     Animated,
@@ -51,6 +51,10 @@ type Filter = {
 }
 
 export default function Search() {
+    const { categoryId } = useLocalSearchParams<{ categoryId: string }>();
+
+    console.log("Received categoryId:", categoryId, typeof categoryId);
+
     const [query, setQuery] = useState("");
     const router = useRouter();
 
@@ -72,6 +76,12 @@ export default function Search() {
                 initialQuery={query}
                 onSearch={onSearch}
                 handleFilters={handleFilters}
+                initialFilters={{
+                    priceRange: 500,
+                    category: CATEGORIES.find((c) => c.id === parseInt(categoryId || "1", 10))?.name || CATEGORIES[0].name,
+                    product: PRODUCTS[0].name,
+                    color: FILTER_COLORS.blue,
+                }}
             />
 
             <TopSearches onClick={setQuery} />
@@ -95,10 +105,12 @@ function SearchInput({
     initialQuery,
     onSearch,
     handleFilters,
+    initialFilters,
 }: {
     initialQuery: string;
     onSearch: (query: string) => void;
     handleFilters: (filters: Filter) => void;
+    initialFilters?: Filter;
 }) {
     const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -132,6 +144,7 @@ function SearchInput({
                 visible={filtersOpen}
                 onClose={() => setFiltersOpen(false)}
                 onApplyFilters={handleFilters}
+                initialFilters={initialFilters}
             />
         </View>
     );
@@ -141,21 +154,23 @@ function FiltersSection({
     visible,
     onClose,
     onApplyFilters,
+    initialFilters,
 }: {
     visible: boolean;
     onClose: () => void;
     onApplyFilters: (filters: Filter) => void;
+    initialFilters?: Filter;
 }) {
     const [selectedFilters, setSelectedFilters] = useState<Filter>({
-        priceRange: 0,
-        category: CATEGORIES[0].name,
-        product: PRODUCTS[0].name,
-        color: FILTER_COLORS.blue,
+        priceRange: initialFilters?.priceRange || 0,
+        category: initialFilters?.category || CATEGORIES[0].name,
+        product: initialFilters?.product || PRODUCTS[0].name,
+        color: initialFilters?.color || FILTER_COLORS.blue,
     });
     const [isMounted, setIsMounted] = useState(visible);
 
     const DISCRETE_VALUES = [100, 500, 1000, 1500];
-    const progress = useSharedValue(0);
+    const progress = useSharedValue(DISCRETE_VALUES.indexOf(selectedFilters.priceRange) || 0);
     const minValue = useSharedValue(0);
     const maxValue = useSharedValue(DISCRETE_VALUES.length - 1);
 

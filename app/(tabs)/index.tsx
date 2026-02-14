@@ -30,13 +30,13 @@ import {
 } from "@/styles/theme";
 
 export default function Home() {
-    const [activeCategoryIndex, setActiveCategoryIndex] = useState(1);
+    const [activeCategoryIndex, setActiveCategoryIndex] = useState(2);
     const router = useRouter();
 
     return (
         <CustomView>
             <ScrollView horizontal={false} contentContainerStyle={styles.container}>
-                <Header onSearch={() => router.navigate("/search")} />
+                <Header onSearch={() => router.navigate({ pathname: "/search", params: { categoryId: activeCategoryIndex } })} />
 
                 <Carousel
                     data={[
