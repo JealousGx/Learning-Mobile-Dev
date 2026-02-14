@@ -1,0 +1,190 @@
+import { AntDesign, Entypo, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { Image, Pressable, StyleSheet, View } from "react-native";
+
+import { BodyText, Heading, Subheading } from "@/components/shared/text";
+import { CustomView } from "@/components/shared/view";
+import { Button } from "@/components/ui/button";
+import { Divider } from "@/components/ui/divider";
+
+import { ITEMS } from "@/constants/data/items";
+
+import { BORDER_RADIUS, COLORS, SPACING } from "@/styles/theme";
+
+export default function Product() {
+    const { productId } = useLocalSearchParams<{ productId: string }>();
+    const router = useRouter();
+
+    const id = Number(productId);
+    const item = ITEMS.find((item) => item.id === id);
+
+    if (!productId || Number.isNaN(id) || !item) {
+        return (
+            <CustomView>
+                <BodyText>Product not found.</BodyText>
+
+                <Button
+                    onPress={() => router.push("/(tabs)")}
+                    style={{ marginTop: 16 }}
+                >
+                    Go back to home
+                </Button>
+            </CustomView>
+        );
+    }
+
+    return (
+        <CustomView style={styles.container}>
+            <Nav
+                categoryName={item.name}
+                onSearch={() => router.navigate("/search")}
+                onBack={() => router.back()}
+            />
+
+            <View style={{ flex: 1 }}>
+                <Image
+                    source={item.image}
+                    style={{
+                        width: "100%",
+                        backgroundColor: COLORS.dark["secondary-foreground"],
+                        borderRadius: BORDER_RADIUS.lg,
+                        marginBottom: SPACING.xl,
+                    }}
+                    resizeMode="cover"
+                />
+
+                <Heading style={{ color: COLORS.dark.primary, marginBottom: SPACING.md }}>{item.name}</Heading>
+
+                <BodyText style={{ color: COLORS.dark["secondary-foreground"], marginBottom: SPACING.md }}>
+                    {item.description}
+                </BodyText>
+
+                <Divider style={{ height: 1 }} />
+
+                <View style={{ gap: SPACING.sm, marginTop: SPACING.md, justifyContent: "space-between" }}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                        <Subheading>${item.price}</Subheading>
+
+                        <View style={{ flexDirection: "row", gap: SPACING.sm }}>
+                            <Button size="icon-sm">
+                                <Entypo name="heart" size={20} color={COLORS.dark.white} />
+                            </Button>
+
+                            <Button size="icon-sm" variant="outline">
+                                <AntDesign
+                                    name="plus"
+                                    size={18}
+                                    color={COLORS.dark.primary}
+                                />
+                            </Button>
+                        </View>
+                    </View>
+
+
+                    <View style={{ alignItems: "flex-end", flexDirection: "row", justifyContent: "space-between" }}>
+                        <BodyText>Users reviews ({item.rating} / 5)</BodyText>
+
+                        <StarRating rating={item.rating} />
+                    </View>
+                </View>
+
+                <Button style={{ marginTop: SPACING.xxl, }} variant="secondary">
+                    <Subheading style={{ color: COLORS.dark.primary }}>
+                        Add To Cart
+                    </Subheading>
+                </Button>
+            </View>
+        </CustomView>
+    );
+}
+
+function StarRating({ rating }: { rating: number }) {
+    const stars = [];
+
+    for (let i = 0; i < 5; i++) {
+        const fill = Math.max(0, Math.min(1, rating - i));
+
+        stars.push(
+            <View
+                key={i}
+                style={{
+                    position: "relative",
+                    width: 20,
+                    height: 20,
+                    marginRight: 4,
+                }}
+            >
+                {/* Outline Star (Border) */}
+                <AntDesign
+                    name="star"
+                    size={20}
+                    color={COLORS.dark["secondary-foreground"]}
+                    style={{ position: "absolute" }}
+                />
+
+                {/* Filled Star (Clipped) */}
+                <View
+                    style={{
+                        position: "absolute",
+                        width: `${fill * 100}%`,
+                        overflow: "hidden",
+                    }}
+                >
+                    <AntDesign name="star" size={20} color={COLORS.dark.primary} />
+                </View>
+            </View>
+        );
+    }
+
+    return (
+        <View style={{ flexDirection: "row", marginTop: 8 }}>
+            {stars}
+        </View>
+    );
+}
+
+function Nav({
+    categoryName,
+    onBack,
+    onSearch,
+}: {
+    categoryName: string;
+    onBack?: () => void;
+    onSearch: () => void;
+}) {
+    return (
+        <View style={styles.nav}>
+            <Pressable onPress={onBack}>
+                <Ionicons name="arrow-back" size={24} color={COLORS.dark.white} />
+            </Pressable>
+
+            <BodyText style={styles.navText}>{categoryName}</BodyText>
+
+            <Button size="icon-sm" onPress={onSearch}>
+                <SimpleLineIcons name="magnifier" size={18} color="black" />
+            </Button>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingHorizontal: 20,
+        paddingVertical: 16,
+        gap: SPACING.xl,
+    },
+
+    nav: {
+        width: "100%",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    navText: {
+        fontSize: 20,
+        lineHeight: 22,
+        fontWeight: "bold",
+        color: COLORS.dark.primary,
+    },
+});

@@ -79,6 +79,20 @@ export default function Layout() {
                         href: null
                     }}
                 />
+
+                <Tabs.Screen
+                    name="products/index"
+                    options={{
+                        href: null
+                    }}
+                />
+
+                <Tabs.Screen
+                    name="products/[productId]"
+                    options={{
+                        href: null
+                    }}
+                />
             </Tabs>
         </View>
     );
