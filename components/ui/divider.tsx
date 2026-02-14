@@ -12,12 +12,12 @@ export function Divider(props: ViewProps) {
         <View
             {...props}
             style={[
-                props.style,
                 {
                     marginVertical: 8,
                     height: StyleSheet.hairlineWidth,
                     backgroundColor: COLORS.dark.primary,
-                }
+                },
+                props.style,
             ]}
         />
     );
