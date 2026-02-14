@@ -1,4 +1,4 @@
-import { AntDesign, Entypo, SimpleLineIcons } from "@expo/vector-icons";
+import { AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -12,10 +12,10 @@ import {
 } from "react-native";
 
 import { Carousel } from "@/components/shared/carousel";
-import { BodyText, Heading, Subheading } from "@/components/shared/text";
+import { Product } from "@/components/shared/product";
+import { BodyText, Heading } from "@/components/shared/text";
 import { CustomView } from "@/components/shared/view";
 import { Button } from "@/components/ui/button";
-import { Divider } from "@/components/ui/divider";
 
 import { BEST_SELLERS, type BestSeller } from "@/constants/data/best-sellers";
 import { CATEGORIES, type Category } from "@/constants/data/categories";
@@ -36,7 +36,14 @@ export default function Home() {
     return (
         <CustomView>
             <ScrollView horizontal={false} contentContainerStyle={styles.container}>
-                <Header onSearch={() => router.navigate({ pathname: "/search", params: { categoryId: activeCategoryIndex } })} />
+                <Header
+                    onSearch={() =>
+                        router.navigate({
+                            pathname: "/search",
+                            params: { categoryId: activeCategoryIndex },
+                        })
+                    }
+                />
 
                 <Carousel
                     data={[
@@ -260,65 +267,19 @@ function LatestCollection({ items }: { items: Item[] }) {
                 numColumns={numColumns}
                 scrollEnabled={false}
                 columnWrapperStyle={{ gap: SPACING.lg, marginBottom: SPACING.lg }}
-                renderItem={({ item }) => (
-                    <TouchableOpacity
-                        style={{
-                            flex: 1,
-                            gap: SPACING.sm,
-                        }}
-                        onPress={() => router.navigate({ pathname: "/products/[productId]", params: { productId: item.id } })}
-                    >
-                        <Image
-                            source={item.image}
-                            style={{ width: "100%", backgroundColor: COLORS.dark["secondary-foreground"], borderRadius: BORDER_RADIUS.lg }}
-                            resizeMode="cover"
-                        />
-
-                        <View style={{ gap: SPACING.xs, flex: 1, justifyContent: "space-between" }}>
-                            <View style={{ gap: SPACING.xs, flex: 1 }}>
-                                <Heading
-                                    style={{
-                                        color: COLORS.dark.primary,
-                                        fontWeight: "500",
-                                    }}
-                                >
-                                    {item.name}
-                                </Heading>
-
-                                <BodyText>{item.description}</BodyText>
-                            </View>
-
-                            <Divider />
-
-                            <View
-                                style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                }}
-                            >
-                                <Subheading>${item.price.toFixed(2)}</Subheading>
-
-                                <View style={{ flexDirection: "row", gap: SPACING.sm }}>
-                                    <Button size="icon-sm">
-                                        <Entypo name="heart" size={20} color={COLORS.dark.white} />
-                                    </Button>
-
-                                    <Button size="icon-sm">
-                                        <AntDesign
-                                            name="plus"
-                                            size={20}
-                                            color={COLORS.dark.white}
-                                        />
-                                    </Button>
-                                </View>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                )}
+                renderItem={({ item }) => <Product item={item} />}
             />
 
-            <Button variant="ghost" onPress={() => router.navigate("/products")} style={{ flexDirection: "row", alignItems: "center", gap: SPACING.sm, marginBottom: SPACING.lg }}>
+            <Button
+                variant="ghost"
+                onPress={() => router.navigate("/products")}
+                style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: SPACING.sm,
+                    marginBottom: SPACING.lg,
+                }}
+            >
                 <BodyText style={{ color: COLORS.dark.primary }}>View All</BodyText>
 
                 <AntDesign name="arrow-right" size={16} color={COLORS.dark.primary} />
