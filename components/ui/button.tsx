@@ -82,9 +82,8 @@ const styles = StyleSheet.create({
         color: COLORS.dark.primary,
     },
     ghostPressed: {
-        backgroundColor: `${COLORS.dark.primary}E6`,
+        opacity: 0.8
     },
-
     destructive: {
         backgroundColor: COLORS.dark.error,
     },
