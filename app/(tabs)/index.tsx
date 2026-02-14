@@ -70,7 +70,7 @@ export default function Home() {
 
                 <BestSellers items={BEST_SELLERS} />
 
-                <LatestCollection items={ITEMS} />
+                <LatestCollection items={ITEMS.slice(6)} />
             </ScrollView>
         </CustomView>
     );
@@ -267,23 +267,25 @@ function LatestCollection({ items }: { items: Item[] }) {
                     >
                         <Image
                             source={item.image}
-                            style={{ width: "100%" }}
+                            style={{ width: "100%", backgroundColor: COLORS.dark["secondary-foreground"], borderRadius: BORDER_RADIUS.lg }}
                             resizeMode="cover"
                         />
 
-                        <View style={{ gap: SPACING.xs }}>
-                            <Heading
-                                style={{
-                                    color: COLORS.dark.primary,
-                                    fontWeight: "500",
-                                }}
-                            >
-                                {item.name}
-                            </Heading>
+                        <View style={{ gap: SPACING.xs, flex: 1, justifyContent: "space-between" }}>
+                            <View style={{ gap: SPACING.xs, flex: 1 }}>
+                                <Heading
+                                    style={{
+                                        color: COLORS.dark.primary,
+                                        fontWeight: "500",
+                                    }}
+                                >
+                                    {item.name}
+                                </Heading>
 
-                            <BodyText>{item.description}</BodyText>
+                                <BodyText>{item.description}</BodyText>
+                            </View>
 
-                            <Divider style={{ marginVertical: SPACING.sm }} />
+                            <Divider />
 
                             <View
                                 style={{
