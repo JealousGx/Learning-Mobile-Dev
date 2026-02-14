@@ -318,7 +318,7 @@ function LatestCollection({ items }: { items: Item[] }) {
                 )}
             />
 
-            <Button variant="secondary" onPress={() => router.navigate("/products")} style={{ flexDirection: "row", alignItems: "center", gap: SPACING.sm, marginBottom: SPACING.lg }}>
+            <Button variant="ghost" onPress={() => router.navigate("/products")} style={{ flexDirection: "row", alignItems: "center", gap: SPACING.sm, marginBottom: SPACING.lg }}>
                 <BodyText style={{ color: COLORS.dark.primary }}>View All</BodyText>
 
                 <AntDesign name="arrow-right" size={16} color={COLORS.dark.primary} />
