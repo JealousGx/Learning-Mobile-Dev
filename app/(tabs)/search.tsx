@@ -1,17 +1,10 @@
 import { Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useRef, useState } from "react";
-import {
-    Animated,
-    Dimensions,
-    Easing,
-    Modal,
-    Pressable,
-    StyleSheet,
-    View,
-} from "react-native";
+import { useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 
+import { BottomSheet } from "@/components/shared/bottom-sheet";
 import { Nav } from "@/components/shared/nav";
 import { Slider } from "@/components/shared/slider";
 import { BodyText, Heading } from "@/components/shared/text";
@@ -22,10 +15,7 @@ import { Input } from "@/components/ui/input";
 import { CATEGORIES } from "@/constants/data/categories";
 import { PRODUCTS } from "@/constants/data/products";
 
-import { COLORS, FONT_SIZES, SPACING } from "@/styles/theme";
-
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
-const SHEET_HEIGHT = SCREEN_HEIGHT * 0.8;
+import { COLORS, FONT_SIZES } from "@/styles/theme";
 
 const FILTER_COLORS = {
     red: "#FF6B6B",
@@ -33,7 +23,7 @@ const FILTER_COLORS = {
     green: "#6BCB77",
     yellow: "#FFD93D",
     purple: "#9D4EDD",
-}
+};
 
 const TOP_SEARCHES = [
     "Bed",
@@ -49,7 +39,7 @@ type Filter = {
     category: string;
     product: string;
     color: string;
-}
+};
 
 export default function Search() {
     const { categoryId } = useLocalSearchParams<{ categoryId: string }>();
@@ -77,7 +67,9 @@ export default function Search() {
                 handleFilters={handleFilters}
                 initialFilters={{
                     priceRange: 500,
-                    category: CATEGORIES.find((c) => c.id === parseInt(categoryId || "1", 10))?.name || CATEGORIES[0].name,
+                    category:
+                        CATEGORIES.find((c) => c.id === parseInt(categoryId || "1", 10))
+                            ?.name || CATEGORIES[0].name,
                     product: PRODUCTS[0].name,
                     color: FILTER_COLORS.blue,
                 }}
@@ -154,55 +146,15 @@ function FiltersSection({
         product: initialFilters?.product || PRODUCTS[0].name,
         color: initialFilters?.color || FILTER_COLORS.blue,
     });
-    const [isMounted, setIsMounted] = useState(visible);
 
     const DISCRETE_VALUES = [100, 500, 1000, 1500];
-    const progress = useSharedValue(DISCRETE_VALUES.indexOf(selectedFilters.priceRange) || 0);
+    const progress = useSharedValue(
+        DISCRETE_VALUES.indexOf(selectedFilters.priceRange) || 0,
+    );
     const minValue = useSharedValue(0);
     const maxValue = useSharedValue(DISCRETE_VALUES.length - 1);
 
     const steps = DISCRETE_VALUES.length - 1;
-
-    const translateY = useRef(new Animated.Value(SHEET_HEIGHT)).current;
-    const backdropOpacity = useRef(new Animated.Value(0)).current;
-
-    useEffect(() => {
-        if (visible) {
-            setIsMounted(true);
-
-            Animated.parallel([
-                Animated.timing(translateY, {
-                    toValue: 0,
-                    duration: 400,
-                    easing: Easing.out(Easing.cubic),
-                    useNativeDriver: true,
-                }),
-                Animated.timing(backdropOpacity, {
-                    toValue: 0.5,
-                    duration: 400,
-                    useNativeDriver: true,
-                }),
-            ]).start();
-        } else {
-            Animated.parallel([
-                Animated.timing(translateY, {
-                    toValue: SHEET_HEIGHT,
-                    duration: 350,
-                    easing: Easing.in(Easing.cubic),
-                    useNativeDriver: true,
-                }),
-                Animated.timing(backdropOpacity, {
-                    toValue: 0,
-                    duration: 350,
-                    useNativeDriver: true,
-                }),
-            ]).start(() => {
-                setIsMounted(false);
-            });
-        }
-    }, [visible]);
-
-    if (!isMounted) return null;
 
     function handleFilters() {
         onApplyFilters(selectedFilters);
@@ -210,133 +162,151 @@ function FiltersSection({
     }
 
     return (
-        <Modal transparent visible animationType="none">
-            <View style={{ flex: 1 }}>
-                {/* Backdrop */}
-                <Pressable style={{ flex: 1 }} onPress={onClose}>
-                    <Animated.View
-                        style={{
-                            flex: 1,
-                            backgroundColor: "black",
-                            opacity: backdropOpacity,
-                        }}
-                    />
-                </Pressable>
+        <BottomSheet visible={visible} onClose={onClose}>
+            <Heading style={{ color: COLORS.dark.primary, textAlign: "center" }}>
+                Filters
+            </Heading>
 
-                <Animated.View
-                    style={{
-                        position: "absolute",
-                        bottom: 0,
-                        width: "100%",
-                        height: SHEET_HEIGHT,
-                        backgroundColor: COLORS.dark.background,
-                        borderTopLeftRadius: 24,
-                        borderTopRightRadius: 24,
-                        padding: SPACING.xl,
-                        transform: [{ translateY }],
-                        flex: 1,
-                        gap: 32
+            <View style={{ height: 64 }}>
+                <Slider
+                    label="Price Range"
+                    labelProps={{
+                        style: {
+                            color: COLORS.dark.primary,
+                            fontSize: FONT_SIZES.md,
+                            fontWeight: "600",
+                        },
                     }}
-                >
-                    <Heading style={{ color: COLORS.dark.primary, textAlign: "center" }}>
-                        Filters
-                    </Heading>
-
-                    <View style={{ height: 64 }}>
-                        <Slider
-                            label="Price Range"
-                            labelProps={{
-                                style: {
-                                    color: COLORS.dark.primary,
-                                    fontSize: FONT_SIZES.md,
-                                    fontWeight: "600",
-                                },
-                            }}
-                            required
-                            minimumValue={minValue}
-                            maximumValue={maxValue}
-                            progress={progress}
-                            steps={steps}
-                            snapToStep
-                            onSlidingComplete={(val) =>
-                                setSelectedFilters((prev) => ({ ...prev, priceRange: DISCRETE_VALUES[val] }))
-                            }
-                            markWidth={45}
-                            renderMark={({ index }) => (
-                                <BodyText style={{ marginTop: 48 }}>
-                                    ${DISCRETE_VALUES[index]}
-                                </BodyText>
-                            )}
-                        />
-                    </View>
-
-                    <View style={{ gap: 16 }}>
-                        <Heading style={{ color: COLORS.dark.primary }}>Categories</Heading>
-
-                        <View style={{ flexWrap: "wrap", gap: 12, flexDirection: "row" }}>
-                            {CATEGORIES.map((category) => (
-                                <Button
-                                    key={category.id}
-                                    size="sm"
-                                    variant="secondary"
-                                    style={{ paddingVertical: 6, paddingHorizontal: 16, backgroundColor: selectedFilters.category === category.name ? COLORS.dark.primary : COLORS.dark.secondary, }}
-                                    onPress={() => setSelectedFilters((prev) => ({ ...prev, category: category.name }))}
-                                >
-                                    <BodyText style={{ color: selectedFilters.category === category.name ? COLORS.dark.background : COLORS.dark.white }}>
-                                        {category.name}
-                                    </BodyText>
-                                </Button>
-                            ))}
-                        </View>
-                    </View>
-
-                    <View style={{ gap: 16 }}>
-                        <Heading style={{ color: COLORS.dark.primary }}>Products</Heading>
-
-                        <View style={{ flexWrap: "wrap", gap: 12, flexDirection: "row" }}>
-                            {PRODUCTS.map((product) => (
-                                <Button
-                                    key={product.id}
-                                    size="sm"
-                                    variant="secondary"
-                                    style={{ paddingVertical: 6, paddingHorizontal: 16, backgroundColor: selectedFilters.product === product.name ? COLORS.dark.primary : COLORS.dark.secondary, }}
-                                    onPress={() => setSelectedFilters((prev) => ({ ...prev, product: product.name }))}
-                                >
-                                    <BodyText style={{ color: selectedFilters.product === product.name ? COLORS.dark.background : COLORS.dark.white }}>
-                                        {product.name}
-                                    </BodyText>
-                                </Button>
-                            ))}
-                        </View>
-                    </View>
-
-                    <View style={{ gap: 16 }}>
-                        <Heading style={{ color: COLORS.dark.primary }}>Colors</Heading>
-
-                        <View style={{ flexWrap: "wrap", gap: 12, flexDirection: "row" }}>
-                            {Object.entries(FILTER_COLORS).map(([colorName, colorValue]) => (
-                                <Pressable
-                                    key={colorName}
-                                    onPress={() => setSelectedFilters((prev) => ({ ...prev, color: colorValue }))}
-                                    style={{
-                                        width: 32,
-                                        height: 32,
-                                        borderRadius: 16,
-                                        backgroundColor: colorValue,
-                                        borderWidth: selectedFilters.color === colorValue ? 3 : 0,
-                                        borderColor: COLORS.dark.primary,
-                                    }}
-                                />
-                            ))}
-                        </View>
-                    </View>
-
-                    <Button variant="secondary" onPress={handleFilters}>
-                        <BodyText style={{ fontSize: FONT_SIZES.md, color: COLORS.dark.primary }}>Apply Filters</BodyText>
-                    </Button>
-                </Animated.View>
+                    required
+                    minimumValue={minValue}
+                    maximumValue={maxValue}
+                    progress={progress}
+                    steps={steps}
+                    snapToStep
+                    onSlidingComplete={(val) =>
+                        setSelectedFilters((prev) => ({
+                            ...prev,
+                            priceRange: DISCRETE_VALUES[val],
+                        }))
+                    }
+                    markWidth={45}
+                    renderMark={({ index }) => (
+                        <BodyText style={{ marginTop: 48 }}>
+                            ${DISCRETE_VALUES[index]}
+                        </BodyText>
+                    )}
+                />
             </View>
-        </Modal>
+
+            <View style={{ gap: 16 }}>
+                <Heading style={{ color: COLORS.dark.primary }}>Categories</Heading>
+
+                <View style={{ flexWrap: "wrap", gap: 12, flexDirection: "row" }}>
+                    {CATEGORIES.map((category) => (
+                        <Button
+                            key={category.id}
+                            size="sm"
+                            variant="secondary"
+                            style={{
+                                paddingVertical: 6,
+                                paddingHorizontal: 16,
+                                backgroundColor:
+                                    selectedFilters.category === category.name
+                                        ? COLORS.dark.primary
+                                        : COLORS.dark.secondary,
+                            }}
+                            onPress={() =>
+                                setSelectedFilters((prev) => ({
+                                    ...prev,
+                                    category: category.name,
+                                }))
+                            }
+                        >
+                            <BodyText
+                                style={{
+                                    color:
+                                        selectedFilters.category === category.name
+                                            ? COLORS.dark.background
+                                            : COLORS.dark.white,
+                                }}
+                            >
+                                {category.name}
+                            </BodyText>
+                        </Button>
+                    ))}
+                </View>
+            </View>
+
+            <View style={{ gap: 16 }}>
+                <Heading style={{ color: COLORS.dark.primary }}>Products</Heading>
+
+                <View style={{ flexWrap: "wrap", gap: 12, flexDirection: "row" }}>
+                    {PRODUCTS.map((product) => (
+                        <Button
+                            key={product.id}
+                            size="sm"
+                            variant="secondary"
+                            style={{
+                                paddingVertical: 6,
+                                paddingHorizontal: 16,
+                                backgroundColor:
+                                    selectedFilters.product === product.name
+                                        ? COLORS.dark.primary
+                                        : COLORS.dark.secondary,
+                            }}
+                            onPress={() =>
+                                setSelectedFilters((prev) => ({
+                                    ...prev,
+                                    product: product.name,
+                                }))
+                            }
+                        >
+                            <BodyText
+                                style={{
+                                    color:
+                                        selectedFilters.product === product.name
+                                            ? COLORS.dark.background
+                                            : COLORS.dark.white,
+                                }}
+                            >
+                                {product.name}
+                            </BodyText>
+                        </Button>
+                    ))}
+                </View>
+            </View>
+
+            <View style={{ gap: 16 }}>
+                <Heading style={{ color: COLORS.dark.primary }}>Colors</Heading>
+
+                <View style={{ flexWrap: "wrap", gap: 12, flexDirection: "row" }}>
+                    {Object.entries(FILTER_COLORS).map(([colorName, colorValue]) => (
+                        <Pressable
+                            key={colorName}
+                            onPress={() =>
+                                setSelectedFilters((prev) => ({ ...prev, color: colorValue }))
+                            }
+                            style={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: 16,
+                                backgroundColor: colorValue,
+                                borderWidth: selectedFilters.color === colorValue ? 3 : 0,
+                                borderColor: COLORS.dark.primary,
+                            }}
+                        />
+                    ))}
+                </View>
+            </View>
+
+            <Button variant="secondary" onPress={handleFilters}>
+                <BodyText
+                    style={{ fontSize: FONT_SIZES.md, color: COLORS.dark.primary }}
+                >
+                    Apply Filters
+                </BodyText>
+            </Button>
+        </BottomSheet>
     );
 }
 
