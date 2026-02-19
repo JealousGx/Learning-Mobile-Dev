@@ -19,7 +19,10 @@ type CartStore = {
 
   addToFavorites: (item: Item) => void;
   removeFromFavorites: (id: number) => void;
+
   reset: () => void;
+  resetItems: () => void;
+  resetFavorites: () => void;
 
   deliveryFee: () => number;
   tax: () => number;
@@ -100,6 +103,8 @@ export const useCartStore = create<CartStore>()(
         })),
 
       reset: () => set(() => initialState),
+      resetItems: () => set(() => ({ items: [] })),
+      resetFavorites: () => set(() => ({ favoriteItems: [] })),
 
       subtotal: () =>
         get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),
