@@ -4,13 +4,20 @@ import { Image, TouchableOpacity, View } from "react-native";
 
 import type { Item } from "@/constants/data/items";
 import ProductInfo from "@/features/[productId]";
+
+import { useCartStore } from "@/store/cart-store";
+
 import { BORDER_RADIUS, COLORS, SPACING } from "@/styles/theme";
+
 import { Button } from "../ui/button";
 import { Divider } from "../ui/divider";
 import { BodyText, Heading, Subheading } from "./text";
 
 export function Product({ item }: { item: Item }) {
     const [displayProductInfo, setDisplayProductInfo] = useState(false);
+
+    const addToCart = useCartStore((state) => state.addToCart);
+    const addToFavorites = useCartStore((state) => state.addToFavorites);
 
     return (
         <TouchableOpacity
@@ -58,11 +65,11 @@ export function Product({ item }: { item: Item }) {
                     <Subheading>${item.price.toFixed(2)}</Subheading>
 
                     <View style={{ flexDirection: "row", gap: SPACING.sm }}>
-                        <Button size="icon-sm">
+                        <Button size="icon-sm" onPress={() => addToFavorites(item)}>
                             <Entypo name="heart" size={20} color={COLORS.dark.white} />
                         </Button>
 
-                        <Button size="icon-sm">
+                        <Button size="icon-sm" onPress={() => addToCart(item)}>
                             <AntDesign name="plus" size={20} color={COLORS.dark.white} />
                         </Button>
                     </View>
