@@ -79,6 +79,13 @@ export default function Layout() {
                         href: null
                     }}
                 />
+
+                <Tabs.Screen
+                    name="checkout"
+                    options={{
+                        href: null
+                    }}
+                />
             </Tabs>
         </View>
     );
