@@ -10,7 +10,7 @@ export type CartItem = Item & {
 
 type CartStore = {
   items: CartItem[];
-  favoriteItems: CartItem[];
+  favoriteItems: Item[];
   addToCart: (item: Item) => void;
   removeFromCart: (id: number) => void;
   incrementQuantity: (id: number) => void;
@@ -80,7 +80,7 @@ export const useCartStore = create<CartStore>()(
 
       addToFavorites: (item: Item) =>
         set((state) => {
-          const exists = state.favoriteItems.find((i) => i.id === item.id);
+          const exists = state.favoriteItems.some((i) => i.id === item.id);
 
           if (exists) {
             return {
@@ -91,7 +91,7 @@ export const useCartStore = create<CartStore>()(
           }
 
           return {
-            favoriteItems: [...state.favoriteItems, { ...item, quantity: 1 }],
+            favoriteItems: [...state.favoriteItems, item],
           };
         }),
       removeFromFavorites: (id: number) =>
