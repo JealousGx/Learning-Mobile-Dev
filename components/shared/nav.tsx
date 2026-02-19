@@ -10,12 +10,14 @@ export function Nav({
     title,
     onBack,
     onSearch,
+    rightComponent,
 }: {
     title?: string;
     onBack?: () => void;
     onSearch?: () => void;
+    rightComponent?: React.ReactNode;
 }) {
-    const shouldCenterTitle = onBack && !onSearch;
+    const shouldCenterTitle = onBack && !onSearch && !rightComponent;
 
     return (
         <View style={styles.nav}>
@@ -34,15 +36,17 @@ export function Nav({
             {title && <BodyText style={[styles.navText, shouldCenterTitle && styles.centeredTitle]}>{title}</BodyText>}
 
             <View style={styles.side}>
-                {onSearch && (
+                {rightComponent ? (
+                    rightComponent
+                ) : onSearch ? (
                     <Button size="icon-sm" onPress={onSearch}>
                         <SimpleLineIcons
                             name="magnifier"
                             size={18}
-                            color="black"
+                            color={COLORS.dark.white}
                         />
                     </Button>
-                )}
+                ) : null}
             </View>
         </View>
     );
