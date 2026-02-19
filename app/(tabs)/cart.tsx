@@ -86,7 +86,7 @@ export default function Cart() {
                     ValueComp={Heading}
                 />
 
-                <Button style={{ marginTop: SPACING.lg }} variant="secondary"><BodyText style={{ color: COLORS.dark.primary, fontWeight: FONT_WEIGHTS.medium, fontSize: FONT_SIZES.md }}>Checkout</BodyText></Button>
+                <Button onPress={() => router.navigate("/checkout")} style={{ marginTop: SPACING.lg }} variant="secondary"><BodyText style={{ color: COLORS.dark.primary, fontWeight: FONT_WEIGHTS.medium, fontSize: FONT_SIZES.md }}>Checkout</BodyText></Button>
             </View>
         </CustomView>
     );
