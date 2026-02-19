@@ -15,17 +15,35 @@ export function Nav({
     onBack?: () => void;
     onSearch?: () => void;
 }) {
+    const shouldCenterTitle = onBack && !onSearch;
+
     return (
         <View style={styles.nav}>
-            {onBack && <Pressable onPress={onBack}>
-                <Ionicons name="arrow-back" size={24} color={COLORS.dark.white} />
-            </Pressable>}
+            <View style={styles.side}>
+                {onBack && (
+                    <Pressable onPress={onBack}>
+                        <Ionicons
+                            name="arrow-back"
+                            size={24}
+                            color={COLORS.dark.white}
+                        />
+                    </Pressable>
+                )}
+            </View>
 
-            {title && <BodyText style={styles.navText}>{title}</BodyText>}
+            {title && <BodyText style={[styles.navText, shouldCenterTitle && styles.centeredTitle]}>{title}</BodyText>}
 
-            {onSearch && <Button size="icon-sm" onPress={onSearch}>
-                <SimpleLineIcons name="magnifier" size={18} color="black" />
-            </Button>}
+            <View style={styles.side}>
+                {onSearch && (
+                    <Button size="icon-sm" onPress={onSearch}>
+                        <SimpleLineIcons
+                            name="magnifier"
+                            size={18}
+                            color="black"
+                        />
+                    </Button>
+                )}
+            </View>
         </View>
     );
 }
@@ -35,12 +53,24 @@ const styles = StyleSheet.create({
         width: "100%",
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
+        position: "relative",
+    },
+    side: {
+        alignItems: "center",
+        justifyContent: "center",
     },
     navText: {
+        flex: 1,
+        textAlign: "center",
         fontSize: 20,
         lineHeight: 22,
         fontWeight: "bold",
         color: COLORS.dark.primary,
+    },
+    centeredTitle: {
+        position: "absolute",
+        left: 0,
+        right: 0,
+        textAlign: "center",
     },
 })

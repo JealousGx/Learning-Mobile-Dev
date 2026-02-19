@@ -59,9 +59,8 @@ export default function Products() {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        paddingHorizontal: 20,
-        paddingVertical: 16,
+        paddingHorizontal: SPACING.lg,
+        paddingTop: SPACING.sm,
         gap: SPACING.xl,
     },
 
