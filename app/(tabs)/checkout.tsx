@@ -33,7 +33,7 @@ export default function Checkout() {
 
     const items = useCartStore((s) => s.items);
     const total = useCartStore((s) => s.total());
-    const resetCart = useCartStore((s) => s.resetItems);
+    const clearCart = useCartStore((s) => s.clearCart);
 
     const [selectedPayment, setSelectedPayment] = useState(PAYMENT_OPTIONS[0]);
     const [isProcessing, setIsProcessing] = useState(false);
@@ -58,7 +58,7 @@ export default function Checkout() {
                 `Your payment via ${selectedPayment} was successful!`,
             );
 
-            resetCart();
+            clearCart();
 
             router.push("/payment-success");
         }, 3000); // 3 seconds
