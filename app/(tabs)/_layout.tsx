@@ -86,6 +86,13 @@ export default function Layout() {
                         href: null
                     }}
                 />
+
+                <Tabs.Screen
+                    name="payment-success"
+                    options={{
+                        href: null
+                    }}
+                />
             </Tabs>
         </View>
     );
