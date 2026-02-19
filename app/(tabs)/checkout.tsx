@@ -1,7 +1,14 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+    ActivityIndicator,
+    Alert,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity,
+    View,
+} from "react-native";
 
 import { Nav } from "@/components/shared/nav";
 import { BodyText, Heading, Subheading } from "@/components/shared/text";
@@ -13,7 +20,6 @@ import { Divider } from "@/components/ui/divider";
 import { useCartStore } from "@/store/cart-store";
 
 import { COLORS, FONT_SIZES, FONT_WEIGHTS, SPACING } from "@/styles/theme";
-
 
 const PAYMENT_OPTIONS = [
     "Cash on Delivery",
@@ -29,6 +35,29 @@ export default function Checkout() {
     const total = useCartStore((s) => s.total());
 
     const [selectedPayment, setSelectedPayment] = useState(PAYMENT_OPTIONS[0]);
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    const handlePayNow = () => {
+        if (!selectedPayment) {
+            Alert.alert(
+                "Select Payment Method",
+                "Please select a payment method before proceeding.",
+            );
+            return;
+        }
+
+        setIsProcessing(true);
+
+        // Simulate payment processing delay
+        setTimeout(() => {
+            setIsProcessing(false);
+            Alert.alert(
+                "Payment Successful",
+                `Your payment via ${selectedPayment} was successful!`,
+            );
+            router.push("/payment-success");
+        }, 3000); // 3 seconds
+    };
 
     return (
         <CustomView>
@@ -212,14 +241,35 @@ export default function Checkout() {
                         Delivery Time
                     </Heading>
 
-                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                        }}
+                    >
                         <Subheading>Estimated Delivery</Subheading>
 
-                        <BodyText style={{ color: COLORS.dark.primary }}>Monday, September 25th</BodyText>
+                        <BodyText style={{ color: COLORS.dark.primary }}>
+                            Monday, September 25th
+                        </BodyText>
                     </View>
                 </View>
 
-                <Button><BodyText style={{ fontSize: FONT_SIZES.md, fontWeight: FONT_WEIGHTS.bold, color: COLORS.dark["primary-foreground"] }}>Pay Now</BodyText></Button>
+                <Button onPress={handlePayNow} disabled={isProcessing}>
+                    {isProcessing ? (
+                        <ActivityIndicator color={COLORS.dark["secondary-foreground"]} />
+                    ) : (
+                        <BodyText
+                            style={{
+                                fontSize: FONT_SIZES.md,
+                                fontWeight: FONT_WEIGHTS.bold,
+                                color: COLORS.dark["primary-foreground"],
+                            }}
+                        >
+                            Pay Now
+                        </BodyText>)}
+                </Button>
             </ScrollView>
         </CustomView>
     );
