@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 16,
-        color: COLORS.dark.foreground,
     },
     iosActions: {
         flexDirection: "row",
