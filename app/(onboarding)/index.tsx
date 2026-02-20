@@ -125,7 +125,11 @@ export default function Onboarding() {
 
                 <TouchableOpacity
                     style={styles.skipBtn}
-                    onPress={() => router.push("/welcome")}
+                    onPress={async () => {
+                        await completeOnboarding();
+
+                        router.push("/welcome")
+                    }}
                 >
                     <BodyText style={{ color: COLORS.dark.secondary }}>Skip</BodyText>
 
