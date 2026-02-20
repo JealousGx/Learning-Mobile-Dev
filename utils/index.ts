@@ -22,3 +22,6 @@ export const clamp = (
   "worklet";
   return Math.min(Math.max(lowerBound, value), upperBound);
 };
+
+export const sleep = (ms = 2000) =>
+  new Promise((resolve) => setTimeout(resolve, ms));

@@ -7,14 +7,14 @@ import {
     type ImageSourcePropType,
     StyleSheet,
     TouchableOpacity,
-    View
+    View,
 } from "react-native";
 
 import { BodyText, Heading } from "@/components/shared/text";
 import { CustomView } from "@/components/shared/view";
 import { Button } from "@/components/ui/button";
 import { Dot } from "@/components/ui/dot";
-
+import { useUserStore } from "@/store/user-store";
 import { COLORS, FONT_SIZES } from "@/styles/theme";
 
 type Step = 1 | 2 | 3 | 4;
@@ -59,10 +59,11 @@ export default function Onboarding() {
 
     const router = useRouter();
 
+    const completeOnboarding = useUserStore((state) => state.completeOnboarding);
+
     const pageOpacity = useRef(new Animated.Value(1)).current;
     const translateX = useRef(new Animated.Value(0)).current;
     const { width } = Dimensions.get("window");
-
 
     const switchStep = (nextStep: Step | null) => {
         if (isAnimating) return;
@@ -115,7 +116,10 @@ export default function Onboarding() {
             <View style={styles.imageContainer}>
                 <Animated.Image
                     source={data[step].image}
-                    style={[styles.image, { transform: [{ translateX }], opacity: pageOpacity }]}
+                    style={[
+                        styles.image,
+                        { transform: [{ translateX }], opacity: pageOpacity },
+                    ]}
                     resizeMode="cover"
                 />
 
@@ -129,7 +133,12 @@ export default function Onboarding() {
                 </TouchableOpacity>
             </View>
 
-            <Animated.View style={[styles.content, { transform: [{ translateX }], opacity: pageOpacity }]}>
+            <Animated.View
+                style={[
+                    styles.content,
+                    { transform: [{ translateX }], opacity: pageOpacity },
+                ]}
+            >
                 <Heading style={styles.title}>{data[step].title}</Heading>
                 <BodyText style={styles.description}>{data[step].description}</BodyText>
             </Animated.View>
@@ -137,17 +146,23 @@ export default function Onboarding() {
             <View style={styles.footer}>
                 <View style={{ display: "flex", flexDirection: "row", gap: 8 }}>
                     {[1, 2, 3, 4].map((s) => (
-                        <TouchableOpacity key={s} onPress={() => switchStep(s as Step)} style={{ cursor: "pointer" }} disabled={isAnimating}>
+                        <TouchableOpacity
+                            key={s}
+                            onPress={() => switchStep(s as Step)}
+                            style={{ cursor: "pointer" }}
+                            disabled={isAnimating}
+                        >
                             <Dot active={s === step} />
                         </TouchableOpacity>
                     ))}
                 </View>
 
                 <Button
-                    onPress={() => {
+                    onPress={async () => {
                         if (step < 4) {
                             switchStep((step + 1) as Step);
                         } else {
+                            await completeOnboarding();
                             router.push("/welcome");
                         }
                     }}
