@@ -1,5 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -18,6 +19,7 @@ import { COLORS, FONT_SIZES } from "@/styles/theme";
 
 export default function SignUpScreen() {
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
 
     const signup = useUserStore((state) => state.signup);
 
@@ -32,6 +34,8 @@ export default function SignUpScreen() {
     const onSubmit = async (data: SignupFormData) => {
         console.log("Signup Data:", data);
 
+        setIsLoading(true);
+
         await signup({
             id: Date.now().toString(),
             name: data.name,
@@ -39,6 +43,8 @@ export default function SignUpScreen() {
             dateOfBirth: data.dateOfBirth,
             password: data.password,
         });
+
+        setIsLoading(false);
 
         router.navigate("/(tabs)");
     };
@@ -185,7 +191,9 @@ export default function SignUpScreen() {
                             </Pressable>
                         </View>
 
-                        <Button onPress={handleSubmit(onSubmit)}>Sign Up</Button>
+                        <Button onPress={handleSubmit(onSubmit)} disabled={isLoading}>
+                            Sign Up
+                        </Button>
                     </View>
                 </View>
 
