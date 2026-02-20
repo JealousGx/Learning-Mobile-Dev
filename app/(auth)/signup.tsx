@@ -1,5 +1,7 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Controller, useForm } from "react-hook-form";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Nav } from "@/components/shared/nav";
 import { BodyText, Heading } from "@/components/shared/text";
@@ -8,10 +10,38 @@ import { Button } from "@/components/ui/button";
 import { DateInput } from "@/components/ui/date-input";
 import { Input } from "@/components/ui/input";
 
+import { type SignupFormData, signupSchema } from "@/schema/signup";
+
+import { useUserStore } from "@/store/user-store";
+
 import { COLORS, FONT_SIZES } from "@/styles/theme";
 
 export default function SignUpScreen() {
     const router = useRouter();
+
+    const signup = useUserStore((state) => state.signup);
+
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: yupResolver(signupSchema),
+    });
+
+    const onSubmit = async (data: SignupFormData) => {
+        console.log("Signup Data:", data);
+
+        await signup({
+            id: Date.now().toString(),
+            name: data.name,
+            email: data.email,
+            dateOfBirth: data.dateOfBirth,
+            password: data.password,
+        });
+
+        router.navigate("/(tabs)");
+    };
 
     return (
         <CustomView style={{ flex: 1 }}>
@@ -25,51 +55,108 @@ export default function SignUpScreen() {
                 <Header />
 
                 <View style={styles.form}>
-                    <Input
-                        label="Full Name"
-                        autoCapitalize="words"
-                        placeholder="Joe Doe"
-                        returnKeyType="next"
-                        required
+                    <Controller
+                        control={control}
+                        name="name"
+                        render={({ field: { onChange, value } }) => (
+                            <Input
+                                label="Full Name"
+                                autoCapitalize="words"
+                                placeholder="Joe Doe"
+                                returnKeyType="next"
+                                onChangeText={onChange}
+                                value={value}
+                                required
+                            />
+                        )}
                     />
+                    <Text style={styles.errorText}>{errors.name?.message || ""}</Text>
 
-                    <Input
-                        label="Email"
-                        keyboardType="email-address"
-                        inputMode="email"
-                        autoCapitalize="none"
-                        placeholder="joe@gmail.com"
-                        returnKeyType="next"
-                        required
+                    <Controller
+                        control={control}
+                        name="email"
+                        render={({ field: { onChange, value } }) => (
+                            <Input
+                                label="Email"
+                                keyboardType="email-address"
+                                inputMode="email"
+                                autoCapitalize="none"
+                                placeholder="joe@gmail.com"
+                                returnKeyType="next"
+                                onChangeText={onChange}
+                                value={value}
+                                required
+                            />
+                        )}
                     />
+                    <Text style={styles.errorText}>{errors.email?.message || ""}</Text>
 
-                    <DateInput label="Date of Birth" onChange={() => { }} required />
-
-                    <Input
-                        label="Password"
-                        secureTextEntry
-                        autoCapitalize="none"
-                        placeholder="********"
-                        required
-                        textContentType="password"
-                        returnKeyType="next"
+                    <Controller
+                        control={control}
+                        name="dateOfBirth"
+                        render={({ field: { onChange, value } }) => (
+                            <DateInput
+                                label="Date of Birth"
+                                onChange={onChange}
+                                value={value ? new Date(value) : undefined}
+                                required
+                            />
+                        )}
                     />
+                    <Text style={styles.errorText}>
+                        {errors.dateOfBirth?.message || ""}
+                    </Text>
 
-                    <Input
-                        label="Confirm Password"
-                        secureTextEntry
-                        autoCapitalize="none"
-                        placeholder="********"
-                        required
-                        textContentType="password"
-                        returnKeyType="done"
+                    <Controller
+                        control={control}
+                        name="password"
+                        render={({ field: { onChange, value } }) => (
+                            <Input
+                                label="Password"
+                                secureTextEntry
+                                autoCapitalize="none"
+                                placeholder="********"
+                                required
+                                textContentType="password"
+                                returnKeyType="next"
+                                onChangeText={onChange}
+                                value={value}
+                            />
+                        )}
                     />
+                    <Text style={styles.errorText}>{errors.password?.message || ""}</Text>
+
+                    <Controller
+                        control={control}
+                        name="confirmPassword"
+                        render={({ field: { onChange, value } }) => (
+                            <Input
+                                label="Confirm Password"
+                                secureTextEntry
+                                autoCapitalize="none"
+                                placeholder="********"
+                                required
+                                textContentType="password"
+                                returnKeyType="done"
+                                onChangeText={onChange}
+                                value={value}
+                            />
+                        )}
+                    />
+                    <Text style={styles.errorText}>
+                        {errors.confirmPassword?.message || ""}
+                    </Text>
 
                     <View style={styles.formActions}>
-                        <View style={{ flexDirection: "row", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
-                            <BodyText>
-                                By continuing, you agree to our{" "}
-                            </BodyText>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: 4,
+                                flexWrap: "wrap",
+                            }}
+                        >
+                            <BodyText>By continuing, you agree to our </BodyText>
 
                             <Pressable>
                                 <BodyText
@@ -98,8 +185,7 @@ export default function SignUpScreen() {
                             </Pressable>
                         </View>
 
-                        <Button onPress={() => router.push("/(tabs)")}>Sign Up</Button>
-
+                        <Button onPress={handleSubmit(onSubmit)}>Sign Up</Button>
                     </View>
                 </View>
 
@@ -164,13 +250,19 @@ const styles = StyleSheet.create({
     form: {
         display: "flex",
         flexDirection: "column",
-        gap: 18,
+        gap: 12,
     },
     formActions: {
         marginTop: 12,
         display: "flex",
         flexDirection: "column",
         gap: 24,
+    },
+
+    errorText: {
+        color: COLORS.dark.error,
+        minHeight: 18,
+        fontSize: FONT_SIZES.sm,
     },
 
     footer: {
