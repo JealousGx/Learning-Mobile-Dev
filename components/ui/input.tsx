@@ -101,7 +101,6 @@ export const inputStyles = StyleSheet.create({
     },
     input: {
         flex: 1,
-        color: COLORS.dark.foreground,
         paddingVertical: 10,
         fontSize: 16,
     },
