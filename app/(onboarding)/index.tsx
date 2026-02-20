@@ -60,6 +60,7 @@ export default function Onboarding() {
     const router = useRouter();
 
     const completeOnboarding = useUserStore((state) => state.completeOnboarding);
+    const isLoading = useUserStore((state) => state.isLoading);
 
     const pageOpacity = useRef(new Animated.Value(1)).current;
     const translateX = useRef(new Animated.Value(0)).current;
@@ -125,6 +126,7 @@ export default function Onboarding() {
 
                 <TouchableOpacity
                     style={styles.skipBtn}
+                    disabled={isAnimating || isLoading}
                     onPress={async () => {
                         await completeOnboarding();
 
@@ -154,7 +156,7 @@ export default function Onboarding() {
                             key={s}
                             onPress={() => switchStep(s as Step)}
                             style={{ cursor: "pointer" }}
-                            disabled={isAnimating}
+                            disabled={isAnimating || isLoading}
                         >
                             <Dot active={s === step} />
                         </TouchableOpacity>
@@ -171,7 +173,7 @@ export default function Onboarding() {
                         }
                     }}
                     style={{ paddingVertical: 8 }}
-                    disabled={isAnimating}
+                    disabled={isAnimating || isLoading}
                 >
                     {step < 4 ? "Next" : "Get Started"}
                 </Button>
