@@ -8,6 +8,8 @@ type User = {
   id: string;
   name: string;
   email: string;
+  dateOfBirth?: string;
+  password?: string;
 };
 
 type UserState = {
@@ -18,6 +20,7 @@ type UserState = {
   hasOnboarded?: boolean;
 
   login: (email: string, password: string) => Promise<void>;
+  signup: (user: User) => Promise<void>;
   logout: () => Promise<void>;
   setUser: (user: User, token: string) => Promise<void>;
   completeOnboarding: () => Promise<void>;
@@ -72,6 +75,35 @@ export const useUserStore = create<UserState>()(
           hasOnboarded: false,
           isLoading: false,
         });
+      },
+
+      signup: async (user) => {
+        set({ isLoading: true });
+
+        try {
+          // 🔹 Mock API call
+          await sleep();
+
+          const newUser = {
+            id: Date.now().toString(),
+            name: user.name,
+            email: user.email,
+            dateOfBirth: user.dateOfBirth,
+          };
+
+          const mockToken = "mock-jwt-token";
+
+          set({
+            user: newUser,
+            token: mockToken,
+            isAuthenticated: true,
+            hasOnboarded: true,
+            isLoading: false,
+          });
+        } catch (error) {
+          set({ isLoading: false });
+          throw error;
+        }
       },
 
       setUser: async (user, token) => {
