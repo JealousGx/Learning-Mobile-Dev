@@ -1,5 +1,8 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";
-import { Pressable, StyleSheet, View } from "react-native";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { Nav } from "@/components/shared/nav";
 import { BodyText, Heading } from "@/components/shared/text";
@@ -7,10 +10,35 @@ import { CustomView } from "@/components/shared/view";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+import { type LoginFormData, loginSchema } from "@/schema/login";
+
+import { useUserStore } from "@/store/user-store";
+
 import { COLORS, FONT_SIZES } from "@/styles/theme";
 
 export default function LoginScreen() {
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
+
+    const login = useUserStore((state) => state.login);
+
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: yupResolver(loginSchema),
+    });
+
+    const onSubmit = async (data: LoginFormData) => {
+        console.log("Login Data:", data);
+
+        setIsLoading(true);
+        await login(data.email, data.password);
+        setIsLoading(false);
+
+        router.navigate("/(tabs)");
+    };
 
     return (
         <CustomView style={styles.container}>
@@ -19,31 +47,52 @@ export default function LoginScreen() {
             <Header />
 
             <View style={styles.form}>
-                <Input
-                    label="Email"
-                    keyboardType="email-address"
-                    inputMode="email"
-                    autoCapitalize="none"
-                    placeholder="joe@gmail.com"
-                    returnKeyType="next"
-                    required
+                <Controller
+                    control={control}
+                    name="email"
+                    render={({ field: { onChange, value } }) => (
+                        <Input
+                            label="Email"
+                            keyboardType="email-address"
+                            inputMode="email"
+                            autoCapitalize="none"
+                            placeholder="joe@gmail.com"
+                            returnKeyType="next"
+                            onChangeText={onChange}
+                            value={value}
+                            required
+                        />
+                    )}
                 />
+                <Text style={styles.errorText}>{errors.email?.message || ""}</Text>
 
-                <Input
-                    label="Password"
-                    secureTextEntry
-                    autoCapitalize="none"
-                    placeholder="********"
-                    required
-                    textContentType="password"
+                <Controller
+                    control={control}
+                    name="password"
+                    render={({ field: { onChange, value } }) => (
+                        <Input
+                            label="Password"
+                            secureTextEntry
+                            autoCapitalize="none"
+                            placeholder="********"
+                            required
+                            textContentType="password"
+                            onChangeText={onChange}
+                            value={value}
+                        />
+                    )}
                 />
+                <Text style={styles.errorText}>{errors.password?.message || ""}</Text>
 
                 <View style={styles.formActions}>
-                    <Button onPress={() => router.push("/(tabs)")}>
+                    <Button onPress={handleSubmit(onSubmit)} disabled={isLoading}>
                         Login
                     </Button>
 
-                    <Pressable style={{ marginTop: 16, alignSelf: "flex-end" }} onPress={() => router.push("/(auth)/forgot-password")}>
+                    <Pressable
+                        style={{ marginTop: 16, alignSelf: "flex-end" }}
+                        onPress={() => router.push("/(auth)/forgot-password")}
+                    >
                         <BodyText style={{ fontSize: FONT_SIZES.sm }}>
                             Forgot Password?
                         </BodyText>
@@ -70,15 +119,21 @@ function Header() {
 function Footer({ onSignup }: { onSignup?: () => void }) {
     return (
         <View style={styles.footer}>
-            <BodyText>
-                Don't have an account?
-            </BodyText>
+            <BodyText>Don't have an account?</BodyText>
 
             <Pressable onPress={onSignup}>
-                <BodyText style={{ color: COLORS.dark.primary, textDecorationLine: "underline", textDecorationStyle: "dashed" }}>Sign up</BodyText>
+                <BodyText
+                    style={{
+                        color: COLORS.dark.primary,
+                        textDecorationLine: "underline",
+                        textDecorationStyle: "dashed",
+                    }}
+                >
+                    Sign up
+                </BodyText>
             </Pressable>
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -104,10 +159,16 @@ const styles = StyleSheet.create({
     form: {
         display: "flex",
         flexDirection: "column",
-        gap: 24,
+        gap: 12,
     },
     formActions: {
         marginTop: 44,
+    },
+
+    errorText: {
+        color: COLORS.dark.error,
+        minHeight: 18,
+        fontSize: FONT_SIZES.sm,
     },
 
     footer: {
