@@ -70,6 +70,7 @@ export const useUserStore = create<UserState>()(
           token: null,
           isAuthenticated: false,
           hasOnboarded: false,
+          isLoading: false,
         });
       },
 
@@ -83,6 +84,7 @@ export const useUserStore = create<UserState>()(
           token,
           isAuthenticated: true,
           hasOnboarded: Math.random() < 0.5,
+          isLoading: false,
         });
       },
 
@@ -91,7 +93,7 @@ export const useUserStore = create<UserState>()(
 
         await sleep();
 
-        set({ hasOnboarded: true });
+        set({ hasOnboarded: true, isLoading: false });
       },
     }),
     {
