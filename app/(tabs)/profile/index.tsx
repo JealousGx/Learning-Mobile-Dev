@@ -22,7 +22,7 @@ export default function Profile() {
     }
 
     const handleEditProfile = () => {
-        // Handle edit profile action
+        router.navigate("/(tabs)/profile/edit");
     };
 
     return (
