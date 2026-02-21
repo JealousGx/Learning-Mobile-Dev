@@ -9,7 +9,7 @@ import {
 
 import { COLORS } from "@/styles/theme";
 
-import { BodyText } from "../shared/text";
+import { Label } from "./label";
 
 type Props = TextInputProps & {
     label?: string;
@@ -36,22 +36,13 @@ export const Input = ({
 
     ...props
 }: Props) => {
-    const { style: labelStyle, ...restLabelProps } = labelProps ?? {};
     const { style: wrapperStyle, ...restWrapperProps } = wrapperProps ?? {};
     const { style: inputStyle, ...restProps } = props ?? {};
 
     return (
         <View {...restWrapperProps} style={[inputStyles.wrapper, wrapperStyle]}>
             {label && (
-                <BodyText {...restLabelProps} style={[inputStyles.label, labelStyle]}>
-                    {label}
-
-                    {required && (
-                        <BodyText style={{ color: COLORS.dark.error, marginLeft: 4 }}>
-                            *
-                        </BodyText>
-                    )}
-                </BodyText>
+                <Label label={label} required={required} labelProps={labelProps} />
             )}
 
             <View style={inputStyles.inputContainer}>
