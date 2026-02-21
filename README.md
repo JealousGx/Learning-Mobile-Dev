@@ -1,50 +1,80 @@
-# Welcome to your Expo app 👋
+# Viora - E-commerce Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Viora is a cross-platform e-commerce mobile application built with Expo and React Native. It features a modern design, user authentication, product browsing, shopping cart functionality, and user profiles.
 
-## Get started
+## Features
 
-1. Install dependencies
+- **User Authentication:** Secure sign-up, login, and password recovery.
+- **Onboarding:** Guided introduction for new users.
+- **Product Catalog:** Browse a wide range of products with detailed listings.
+- **Shopping Cart:** Add, remove, and manage items in your cart.
+- **Favorites:** Save products for later.
+- **User Profile:** View and edit your personal information.
+- **Search Functionality:** Easily find products.
+- **Cross-Platform:** Available on Android, iOS, and Web.
 
+## Technologies Used
+
+- **Expo:** For building universal React applications.
+- **React Native:** For native mobile UI development.
+- **Expo Router:** File-based routing for seamless navigation.
+- **Zustand:** For state management.
+- **React Hook Form & Yup:** For form handling and validation.
+- **TypeScript:** For type safety.
+- **Biome:** For code linting and formatting.
+
+## Get Started
+
+Follow these steps to set up and run Viora on your local machine.
+
+### Prerequisites
+
+- Node.js (LTS version recommended)
+- npm or Yarn
+- Expo CLI (`npm install -g expo-cli`)
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone --branch viora --single-branch https://github.com/JealousGx/Learning-Mobile-Dev
+   cd viora
+   ```
+2. **Install dependencies:**
    ```bash
    npm install
+   # or
+   yarn install
    ```
 
-2. Start the app
+### Running the Application
 
+1. **Start the Expo development server:**
    ```bash
    npx expo start
    ```
+2. **Open on your device/simulator:**
+   - Scan the QR code with the Expo Go app on your phone.
+   - Run on Android emulator: Press `a` in the terminal.
+   - Run on iOS simulator: Press `i` in the terminal.
+   - Run on web browser: Press `w` in the terminal.
 
-In the output, you'll find options to open the app in a
+### Project Structure
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+├── app/                  # Application routes and screens
+│   ├── (auth)/           # Authentication flows (login, signup, forgot password)
+│   ├── (onboarding)/     # First-time user introduction
+│   └── (tabs)/           # Main application screens (home, cart, profile, etc.)
+├── components/           # Reusable UI components
+├── constants/            # Application constants (colors, data, theme)
+├── hooks/                # Custom React hooks
+├── store/                # Zustand stores for global state
+├── assets/               # Static assets (images, icons)
+├── schema/               # Form validation schemas
+└── utils/                # Utility functions
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## License
 
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project is licensed under the MIT License.
