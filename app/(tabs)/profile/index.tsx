@@ -1,10 +1,20 @@
-import { Entypo, EvilIcons, Feather, FontAwesome, Fontisto, MaterialIcons } from "@expo/vector-icons";
+import {
+    Entypo,
+    EvilIcons,
+    Feather,
+    FontAwesome,
+    Fontisto,
+    MaterialIcons,
+} from "@expo/vector-icons";
 import { Redirect, useRouter } from "expo-router";
+import { useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 
+import { BottomSheet } from "@/components/shared/bottom-sheet";
 import { Nav } from "@/components/shared/nav";
 import { BodyText, Heading, Subheading } from "@/components/shared/text";
 import { CustomView } from "@/components/shared/view";
+import { Button } from "@/components/ui/button";
 import { VerticalDivider } from "@/components/ui/divider";
 
 import { useUserStore } from "@/store/user-store";
@@ -13,6 +23,7 @@ import { COLORS, SPACING } from "@/styles/theme";
 
 export default function Profile() {
     const router = useRouter();
+    const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
     const user = useUserStore((state) => state.user);
     const logout = useUserStore((state) => state.logout);
@@ -20,6 +31,10 @@ export default function Profile() {
     if (!user) {
         return <Redirect href="/(onboarding)/welcome" />;
     }
+
+    const onLogout = () => {
+        setIsBottomSheetOpen(true);
+    };
 
     const handleEditProfile = () => {
         router.navigate("/(tabs)/profile/edit");
@@ -90,13 +105,58 @@ export default function Profile() {
             </View>
 
             <View style={{ gap: SPACING.md }}>
-                <Option label="Privacy Policy" IconComp={<Feather name="key" size={24} color="black" />} />
-                <Option label="Payment Methods" IconComp={<FontAwesome name="credit-card" size={24} color="black" />} />
-                <Option label="Notifications" IconComp={<Feather name="bell" size={24} color="black" />} />
-                <Option label="Settings" IconComp={<EvilIcons name="gear" size={24} color="black" />} />
-                <Option label="Help" IconComp={<MaterialIcons name="support-agent" size={24} color="black" />} />
-                <Option label="Logout" IconComp={<MaterialIcons name="logout" size={24} color="black" />} onPress={logout} />
+                <Option
+                    label="Privacy Policy"
+                    IconComp={<Feather name="key" size={24} color="black" />}
+                />
+                <Option
+                    label="Payment Methods"
+                    IconComp={<FontAwesome name="credit-card" size={24} color="black" />}
+                />
+                <Option
+                    label="Notifications"
+                    IconComp={<Feather name="bell" size={24} color="black" />}
+                />
+                <Option
+                    label="Settings"
+                    IconComp={<EvilIcons name="gear" size={24} color="black" />}
+                />
+                <Option
+                    label="Help"
+                    IconComp={
+                        <MaterialIcons name="support-agent" size={24} color="black" />
+                    }
+                />
+                <Option
+                    label="Logout"
+                    IconComp={<MaterialIcons name="logout" size={24} color="black" />}
+                    onPress={() => setIsBottomSheetOpen(true)}
+                />
             </View>
+
+            <BottomSheet
+                visible={isBottomSheetOpen}
+                onClose={() => setIsBottomSheetOpen(false)}
+                sheetHeight={200}
+            >
+                <Subheading
+                    style={{ textAlign: "center" }}
+                >
+                    Are you sure you want to logout?
+                </Subheading>
+
+                <View
+                    style={{
+                        flexDirection: "row",
+                        gap: SPACING.lg,
+                        justifyContent: "center",
+                    }}
+                >
+                    <Button variant="outline" onPress={() => setIsBottomSheetOpen(false)}>Cancel</Button>
+
+                    <Button variant="secondary" onPress={logout}>Logout</Button>
+                </View>
+            </BottomSheet>
         </CustomView>
     );
 }
@@ -115,10 +175,27 @@ function EditProfileButton({ onPress }: { onPress: () => void }) {
     );
 }
 
-function Option({ onPress, IconComp, label }: { onPress?: () => void, IconComp: React.ReactNode, label: string }) {
+function Option({
+    onPress,
+    IconComp,
+    label,
+}: {
+    onPress?: () => void;
+    IconComp: React.ReactNode;
+    label: string;
+}) {
     return (
-        <TouchableOpacity onPress={onPress} style={{ flexDirection: "row", alignItems: "center", gap: SPACING.lg }}>
-            <View style={{ backgroundColor: COLORS.dark.primary, padding: SPACING.sm, borderRadius: "100%" }}>
+        <TouchableOpacity
+            onPress={onPress}
+            style={{ flexDirection: "row", alignItems: "center", gap: SPACING.lg }}
+        >
+            <View
+                style={{
+                    backgroundColor: COLORS.dark.primary,
+                    padding: SPACING.sm,
+                    borderRadius: "100%",
+                }}
+            >
                 {IconComp}
             </View>
 
