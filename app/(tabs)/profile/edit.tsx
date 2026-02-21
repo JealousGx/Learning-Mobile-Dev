@@ -68,9 +68,11 @@ export default function EditProfile() {
 
         setIsLoading(false);
 
-        Alert.alert("Profile Updated", "Your profile has been updated successfully.", [
-            { text: "OK" },
-        ]);
+        Alert.alert(
+            "Profile Updated",
+            "Your profile has been updated successfully.",
+            [{ text: "OK" }],
+        );
     };
 
     if (!user) {
@@ -221,10 +223,31 @@ export default function EditProfile() {
                         <Text style={styles.errorText}>{errors.gender?.message || ""}</Text>
                     </View>
 
-                    <Button onPress={handleSubmit(onSubmit)} variant="secondary" disabled={isLoading} style={{ flexDirection: "row", position: "relative", justifyContent: "center", gap: SPACING.sm }}>
-                        {isLoading && <ActivityIndicator color={COLORS.dark.white} style={{ marginRight: SPACING.sm, position: "absolute", left: "35%" }} />}
+                    <Button
+                        onPress={handleSubmit(onSubmit)}
+                        variant="secondary"
+                        disabled={isLoading}
+                        style={{
+                            flexDirection: "row",
+                            position: "relative",
+                            justifyContent: "center",
+                            gap: SPACING.sm,
+                        }}
+                    >
+                        {isLoading && (
+                            <ActivityIndicator
+                                color={COLORS.dark.white}
+                                style={{
+                                    marginRight: SPACING.sm,
+                                    position: "absolute",
+                                    left: "35%",
+                                }}
+                            />
+                        )}
 
-                        <BodyText style={{ color: COLORS.dark.primary }}>Update Profile</BodyText>
+                        <BodyText style={{ color: COLORS.dark.primary }}>
+                            Update Profile
+                        </BodyText>
                     </Button>
                 </View>
             </ScrollView>
