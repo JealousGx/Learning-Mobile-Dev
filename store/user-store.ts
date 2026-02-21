@@ -10,6 +10,8 @@ type User = {
   email: string;
   dateOfBirth?: string;
   password?: string;
+  number?: string;
+  gender?: "male" | "female";
 };
 
 type UserState = {
@@ -23,6 +25,7 @@ type UserState = {
   signup: (user: User) => Promise<void>;
   logout: () => Promise<void>;
   setUser: (user: User, token: string) => Promise<void>;
+  updateUser: (user: Partial<User>) => Promise<void>;
   completeOnboarding: () => Promise<void>;
 };
 
@@ -118,6 +121,20 @@ export const useUserStore = create<UserState>()(
           hasOnboarded: Math.random() < 0.5,
           isLoading: false,
         });
+      },
+
+      updateUser: async (user) => {
+        set({ isLoading: true });
+
+        await sleep();
+
+        set((state) => ({
+          user: {
+            ...state.user,
+            ...user,
+          } as User,
+          isLoading: false,
+        }));
       },
 
       completeOnboarding: async () => {
