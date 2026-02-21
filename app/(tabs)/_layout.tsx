@@ -65,11 +65,18 @@ export default function Layout() {
                 />
 
                 <Tabs.Screen
-                    name="profile"
+                    name="profile/index"
                     options={{
                         tabBarIcon: ({ color }) => (
                             <Ionicons name="person" size={28} color={color} />
                         ),
+                    }}
+                />
+
+                <Tabs.Screen
+                    name="profile/edit"
+                    options={{
+                        href: null,
                     }}
                 />
 
