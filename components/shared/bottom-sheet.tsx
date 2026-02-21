@@ -17,14 +17,16 @@ export function BottomSheet({
     children,
     visible = false,
     onClose,
+    sheetHeight = SHEET_HEIGHT,
 }: {
     children: React.ReactNode;
     visible: boolean;
     onClose?: () => void;
+    sheetHeight?: number;
 }) {
     const [isMounted, setIsMounted] = useState(visible);
 
-    const translateY = useRef(new Animated.Value(SHEET_HEIGHT)).current;
+    const translateY = useRef(new Animated.Value(sheetHeight)).current;
     const backdropOpacity = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
@@ -47,7 +49,7 @@ export function BottomSheet({
         } else {
             Animated.parallel([
                 Animated.timing(translateY, {
-                    toValue: SHEET_HEIGHT,
+                    toValue: sheetHeight,
                     duration: 350,
                     easing: Easing.in(Easing.cubic),
                     useNativeDriver: true,
@@ -84,7 +86,7 @@ export function BottomSheet({
                         position: "absolute",
                         bottom: 0,
                         width: "100%",
-                        height: SHEET_HEIGHT,
+                        height: sheetHeight,
                         backgroundColor: COLORS.dark.background,
                         borderTopLeftRadius: 24,
                         borderTopRightRadius: 24,
