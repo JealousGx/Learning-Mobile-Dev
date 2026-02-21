@@ -15,10 +15,10 @@ import { BodyText, Heading, Subheading } from "@/components/shared/text";
 import { CustomView } from "@/components/shared/view";
 
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Divider } from "@/components/ui/divider";
 
 import { useCartStore } from "@/store/cart-store";
-
 import { COLORS, FONT_SIZES, FONT_WEIGHTS, SPACING } from "@/styles/theme";
 
 const PAYMENT_OPTIONS = [
@@ -203,40 +203,13 @@ export default function Checkout() {
                         }}
                     >
                         {PAYMENT_OPTIONS.map((option) => (
-                            <TouchableOpacity
+                            <Checkbox
                                 key={option}
-                                style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    gap: SPACING.sm,
-                                }}
-                                onPress={() => setSelectedPayment(option)}
-                            >
-                                <View
-                                    style={{
-                                        width: 20,
-                                        height: 20,
-                                        borderRadius: 4,
-                                        borderWidth: 2,
-                                        borderColor: COLORS.dark.primary,
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    {selectedPayment === option && (
-                                        <View
-                                            style={{
-                                                width: 12,
-                                                height: 12,
-                                                backgroundColor: COLORS.dark.primary,
-                                            }}
-                                        />
-                                    )}
-                                </View>
-                                <BodyText style={{ color: COLORS.dark.primary }}>
-                                    {option}
-                                </BodyText>
-                            </TouchableOpacity>
+                                label={option}
+                                checked={selectedPayment === option}
+                                onValueChange={setSelectedPayment}
+                                value={option}
+                            />
                         ))}
                     </View>
                 </View>
@@ -273,7 +246,8 @@ export default function Checkout() {
                             }}
                         >
                             Pay Now
-                        </BodyText>)}
+                        </BodyText>
+                    )}
                 </Button>
             </ScrollView>
         </CustomView>
