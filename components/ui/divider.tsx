@@ -22,3 +22,22 @@ export function Divider(props: ViewProps) {
         />
     );
 }
+
+export function VerticalDivider(props: ViewProps) {
+    return (
+        <View
+            {...props}
+            style={[
+                {
+                    marginHorizontal: 8,
+                    width: StyleSheet.hairlineWidth,
+                    height: "100%",
+                    backgroundColor: COLORS.dark.primary,
+                },
+                props.style,
+            ]}
+        />
+    );
+}
+
+
